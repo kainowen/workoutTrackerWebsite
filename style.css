@@ -1,0 +1,266 @@
+body{
+	
+	font-size: 1rem;
+	font-family: 'Montserrat' ;
+	
+}
+
+#background{
+
+	background: url("images/backgroundimage.jpg");
+	background-size: cover;
+	background-repeat: no-repeat;	
+	position: static;
+	
+}
+
+#signUpBody{
+	
+	text-align: center;
+	color: white;
+	width: 550px;
+}
+
+#logo{
+	
+	height: 150px;
+	
+}
+
+h1{ 
+	
+	font-size: 3rem;
+	font-weight: bold;
+	
+}
+
+h2{
+	
+	font-size: 2rem;
+	
+}
+
+
+.logInElements{ 
+	
+	display: none;
+	
+}
+
+.textInput{
+	
+	height: 50px;
+	border-radius: 25px;
+	border: none;
+	border: solid #EFEFEF 1px;
+	padding-left: 30px;
+}
+
+.textInput:hover{
+	
+	border: solid 3px #00ECFF;
+	padding-left: 27px;
+	
+}
+
+.inputShell{
+	
+	text-align: left;
+	width: 350px;
+	margin: 25px;
+	border: none;
+	position: relative;
+	margin-left: 50%;
+	left: -175px;
+}
+
+
+.button{
+	
+	color: black;
+	font-weight: bold;
+	background-color: #00ECFF;
+	height: 50px;
+	border-radius: 25px;
+	border: none;
+
+}
+
+.emphasis{
+	
+	color: #00ECFF !important;	
+	font-weight: bold;
+	
+}
+
+input{
+	        
+    outline: 0;
+	border: 0;
+	        
+}
+
+input:active{
+	        
+    outline: 0;
+	border: 0;
+	        
+}
+
+input:hover{
+	        
+    outline: 0;
+	border: 0;
+	        
+}
+
+
+#footer{
+
+	background-color: black;
+	color: white;
+	text-align: center;
+	font-size: 0.8rem;
+
+}
+
+@media only screen and (max-width: 600px) {
+ 	#logo{
+	
+	display: none;
+	
+	}
+	
+	#signUpBody{
+		
+		padding: 50px 20px 50px 20px;
+		
+	}
+	
+}
+
+.header{
+	
+	background-color: black;
+	color: white;
+	padding: 5px;
+
+}
+
+.headerLogo{
+	
+	width: 30px;
+	
+}
+
+.pageTitle{
+
+	font-weight: bold;
+	font-size: 1rem;
+	width: 200px;
+	
+}
+
+#avatar{
+	
+	border-radius: 50%;
+	width: 40px;
+	height: 40px;
+}
+
+
+.active{
+
+	text-decoration: underline;
+	
+}
+
+
+.active-sm{
+            
+    border-bottom: solid 2px #00ECFF;
+            
+}
+
+
+.activityBlock{
+
+	
+	border-radius: 15px;
+	border: solid #EFEFEF 1px;
+	background-color: #F6F6F6;
+	
+}
+
+.pointer{
+	
+	cursor: pointer;
+
+}
+
+#namePopup, #emailPopup{
+	
+	display: none;	
+	
+}
+
+.selectButton{
+	
+	width: 175px;
+	height: 175px;
+	border-radius: 15px;
+	border: solid 2px #EEEEEE;
+	
+}
+
+button:active{
+	
+	outline: 0;
+	border: none;
+}
+
+.selectButton-active{
+	
+	border: solid 3px #00ECFF;
+	
+}
+
+.numberInput{
+	
+	height: 50px;
+	border-radius: 25px;
+	border: none;
+	padding-left: 30px;
+	border: solid gray 1px;
+	
+}
+
+.numberInput:hover{
+	
+	border: solid 3px #00ECFF;
+	padding-left: 27px;
+	
+}
+
+.bg-dark{
+
+	background-color: #001730 !important;
+	
+}
+
+.alerts{
+	        
+    background-color: red;
+    border-radius: 25px 25px 15px 15px;
+    padding: 55px 30px 5px 30px;
+    margin-top: -50px;
+    color: white;
+	   
+}
+	    
+.input-alert{
+	        
+    border: 3px solid red;
+	padding: 27px;
+	        
+}

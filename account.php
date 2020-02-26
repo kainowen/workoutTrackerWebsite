@@ -2,15 +2,9 @@
     
     session_start();
 
-    $alert = [];
     $userId = $_COOKIE['workoutTracker'];
     $email = $_SESSION['email'];
-    $setDetails1=[];
-    $setDetails2=[];
-    $_SESSION['setDetails'] = [];
-    $_SESSION['setDetails2'] = [];
-    $_SESSION['level'] = "";
-    
+
     if (isset($_POST["logout"])){
 
         setcookie("workoutTracker", "", time()- 3600, "/");
@@ -55,35 +49,75 @@
             
     }
     
-    $notificationArray=[];
+    $success = [];
+    $alert = [];
     
-    $query = "SELECT *
-              FROM notificationrecord
-              WHERE userid = '".$_SESSION['id']."'
-              ORDER BY id DESC
-              LIMIT 10";
-    
-    $result = mysqli_query($link, $query);
-
-    foreach($result as $value){
+    if(isset($_POST['save']) && $_POST['save'] === "save updates"){
         
-       $query2 = "SELECT *
-                  FROM notificationtemplate
-                  WHERE id = '".$value['notificationid']."'";
-                  
-        $result2 = mysqli_query($link, $query2);
-        $row = mysqli_fetch_array($result2);
-        $date = explode(" ", $value["date_created"]);
-       
-        $notification = "<div class='activityBlock p-3 mb-3'>
-					        <p class='font-weight-bold'><i class='fas fa-check emphasis pr-2'></i>".$row['title']."</p>
-					        <p class='px-4'>".$row['body']." ".$value['details']."</p>
-					        <p class='px-4'> <small><span class='pr-2'>".$date[1]."</span><span>".$date[0]."</span></small></p>
-				        </div>";
+        $query = "SELECT password
+                    FROM myusers
+                    WHERE id ='".$userId."'";
         
-        array_push($notificationArray, $notification); 
+        $result = mysqli_query($link, $query);
+        $row = mysqli_fetch_array($result);
+        
+        if (password_verify($_POST['currentPassword'], $row['password'])){
             
-    }
+            if (isset($_POST['newPassword']) && $_POST['newPassword'] !== ""){
+                
+                if($_POST['newPassword'] === $_POST['newPasswordConfirm']){
+                    
+                    $newPassword = password_hash($_POST['newPassword'], PASSWORD_DEFAULT);
+                    
+                    $query = "UPDATE myusers
+                              SET password = '".$newPassword."'
+                              WHERE id = '".$userId."'";
+                    
+                    mysqli_query($link, $query);
+                    
+                    array_push($success, "Password Changed Successfully");
+                }
+                  
+            }
+            
+            
+            if(isset($_POST['newEmail']) && $_POST['newEmail'] !== "" ){
+
+                $newEmail = mysqli_real_escape_string($link, $_POST['newEmail']);   
+    
+                $query = "UPDATE myusers
+                            SET email = '".$newEmail."'
+                            WHERE id = ".$userId;
+                            
+                mysqli_query($link, $query);
+                            
+                array_push($success, "Email Changed Successfully");    
+
+            }
+            
+            if(isset($_POST['newName']) && $_POST['newName'] !== "" ){
+
+                $newName = mysqli_real_escape_string($link, $_POST['newName']);   
+    
+                $query = "UPDATE myusers
+                            SET Name = '".$newName."'
+                            WHERE id = ".$userId;
+                            
+                mysqli_query($link, $query);
+                            
+                array_push($success, "Name Changed Successfully");    
+
+            }
+            
+            
+        } else {
+            
+            array_push($alert, 'Invalid password');
+    
+        }
+     
+    } 
+  
 ?>
 
 <!doctype html>
@@ -98,21 +132,20 @@
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" href="style.css">
-
-   
-    <title>MY MGP - Dashboard</title>
+	  
+<title>MY MGP - account</title>
   </head>
   <body>
-		<nav class="navbar navbar-expand-lg navbar-dark bg-dark py-0">
+    
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-0 m-0">
 			<div class="container col-md-8">		
-		  		<a class="navbar-brand align-middle pageTitle mx-0" href="index.html"> 
-					<img src="images/logo.png" class="headerLogo mr-2" alt="">
-		  			Welcome back!
-				</a>		  
+		  		<a class="navbar-brand pageTitle align-middle mx-0" href="index.php"> 
+					<img src="images/logo.png" class="headerLogo d-inline-block mr-2" alt="">
+		  		</a>		  
 
 		  		<div>
 					<ul class="nav mx-0">
-						<li class="nav-item dropdown">
+						<li class="nav-item dropleft">
 							<a class="nav-link" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 								<span class="emphasis">account</span>
 								<img id="avatar" src="images/avatar_mini.jpg" class="ml-2">
@@ -134,38 +167,59 @@
 				</div>
 			</div>
 		</nav>
-	  
+
 	<div class="row mt-4 mx-0">
 		<div class="col-md-8 container p-4">
-        	<h1> Your dashboard </h1>
-			<h4 class="pt-1"> A quick and easy way to see your progress </h4>
-            <div id="activityFeed" class="mb-5">
-	
-				<?php
+		    <div>
+		        <div><?php if(array_key_exists(0, $alert)){echo "<div class='alert alert-danger'>".$alert[0]."</div>";} ?></div>
+                <div><?php if(array_key_exists(0, $success)){echo "<div class='alert alert-success'>".$success[0]."</div>";} ?></div>
+            </div>
+            <h1> Your account </h1>
+			<h4 class="pt-1"> Ensure your details are up to date! </h4>
+			<form method="post">
+ 
+				<div class="activityBlock p-4 mb-3">
+					<h4 class="font-weight-bold"> Details </h4>
+						
+					<p class="w-75"> Name:
+						<span class="font-weight-bold"> <?php echo $_SESSION['name'];?> </span>
+                    	<span id="nameUpdate" class="emphasis float-right pointer"> update </span> 	
+					</p>
+					<input id="namePopup" type="name" class="textInput mb-3 editToggle" placeholder="enter your name" name="newEmail">        
+             	
+					<p class="w-75"> email:
+						<span class="font-weight-bold pr-1"> <?php echo $_SESSION['email'];?></span>
+                        <span id="emailUpdate" class="emphasis float-right pointer"> update </span> 
+                    </p>
+					<input id="emailPopup" type="email" class="textInput editToggle" placeholder="enter your email address" name="newEmail">        
+				</div>
                 
-                $i = 1;
+				<div class="activityBlock p-4 mb-3">
+                    <h4 class="font-weight-bold"> Update Password </h4>
+					<p> Make sure your new password is <strong>safe and memorable</strong></p>
+
+					<label for="newPassword"> new password: </label><br>
+                   	<input class ="textInput mb-3 col-lg-3" type="password" placeholder="enter new password" name="newPassword"><br>
+
+
+					<label for="newPasswordConfirm"> confirm new password: </label><br>
+					<input class ="textInput mb-3 col-lg-3" type="password" placeholder="re-enter new password..." name="newPasswordConfirm">	
+
+                </div>
                 
-                foreach($notificationArray as $feed){
-                    
-                    echo $feed;
-                    $i++;
-                
-                }
-                
-                if ($i <10){
-                    
-                    echo "<div class='center'> <p>No More Alerts To Show... Get Busy <p></div>";
-                    
-                }
-                
-                ?>
-				
+				<div class="activityBlock p-4 mb-5 bg-dark text-white clearfix">
+                    <h4 class="font-weight-bold" > Update and save </h4>
+					<p>For security purposes please enter your <strong> current </strong> password</p>
 					
-			</div>
-    	</div>
-    </div>
-    
-        
+					<label for="currentPassword"> current password: </label><br>
+					<input class ="textInput my-2 mr-4 col-lg-4" id="currentPassword" type="password" name="currentPassword" placeholder="enter current password">
+					<input type="submit" name="save" class="button float-right mt-2 col-lg-3" value="save updates">
+
+                </div>
+            </form>
+		</div>
+
+	  
     <nav class="nav fixed-bottom navbar-expand-lg navbar-dark bg-dark p-1">
 		<ul class="navbar-nav d-flex flex-row bd-highlight w-100">
 			<li class="nav-item w-25 text-center py-1">
@@ -194,9 +248,9 @@
 			</li>
 		</ul>
 	</nav>
-      
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    
+    
+    
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
