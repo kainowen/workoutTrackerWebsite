@@ -1,18 +1,26 @@
 <?php
 
     session_start();
-    
         $level = $_SESSION["level"];
         $workout = $_SESSION["workout"];
         $_SESSION['setDetails2']  = [];
         $exerciseRecord = $_SESSION['id']."exerciserecord";
-
+        $workoutName = "'".$level.", ".$workout."'";
+        $idHolder = $_SESSION['id'];
+        $date = date('Y-m-d H:i:s', time());
+        
         $link = mysqli_connect("shareddb-s.hosting.stackcp.net", "myusers-3132359bf0", "SAb.DCIPW}'c", "myusers-3132359bf0");
-    
+
         if (!$link) {
                
             die('Connect Error: ' . mysqli_connect_error());
         }
+            
+        if (($_SESSION['level'] === '') ){
+
+            header("location: select_workout.php");
+            
+        }    
             
         
         $query ="SELECT *
@@ -44,10 +52,10 @@
                 
                 $exSelector = ($value["id"] - 1);
                 $setDetails = unserialize($_SESSION['setDetails'][$exSelector]);
-
-                $workoutTable .= "<td>".$setDetails[0]."</td>
-                                  <td>".$setDetails[1]."</td>
-                                  <td>".$setDetails[2]."</td>
+                
+                $workoutTable .= "<td class='tableBox weightInput'>".$setDetails[0]."</td>
+                                  <td class='tableBox'>".$setDetails[1]."</td>
+                                  <td class='tableBox'>".$setDetails[2]."</td>
                               </tr>";
                    
         }
@@ -76,9 +84,9 @@
                 $exSelector = ($value["id"] - 1);
                 $setDetails = unserialize($_SESSION['setDetails'][$exSelector]);
 
-                $editTable .=  "<td><input type='number' value='".$setDetails[0]."' class='tableBox weightInput' name='weightInput[]'></td>
-                                <td><input type='number' value='".$setDetails[1]."' class='tableBox repInput' name='repInput[]'></td>
-                                <td><input type='number' value='".$setDetails[2]."' class='tableBox rpeInput' name='rpeInput[]'></td>
+                $editTable .=  "<td><input type='number' step='0.5' value='".$setDetails[0]."' class='editTableBox weightInput' name='weightInput[]'></td>
+                                <td><input type='number' value='".$setDetails[1]."' class='editTableBox repInput' name='repInput[]'></td>
+                                <td><input type='number' step='0.5' value='".$setDetails[2]."' class='editTableBox rpeInput' name='rpeInput[]'></td>
                             </tr>";
                    
         }            
@@ -86,19 +94,34 @@
                     
     if (isset($_POST['submit']) && $_POST['submit'] ==='Confirm'){
         
-        $i = 0;  
+        $query = "INSERT INTO notificationrecord(userid, notificationid, date_created, details) 
+                  VALUES(".$idHolder.", 2, '".$date."', ".$workoutName.")";
+                  
 
+        $result = mysqli_query($link, $query);
+        
+        $i = 0;  
+        $_SESSION['setDetails'] = [];
         while ($i < count($_POST['weightInput'])){
                 
-                $setSave = [];
+                if (isset($_POST['weightInput'])){
+                    
+                    $setSave = [];
                 
-                array_push($setSave, $_POST['weightInput'][$i]);
-                array_push($setSave, $_POST['repInput'][$i]);
-                array_push($setSave, $_POST['rpeInput'][$i]);
+                    array_push($setSave, $_POST['weightInput'][$i]);
+                    array_push($setSave, $_POST['repInput'][$i]);
+                    array_push($setSave, $_POST['rpeInput'][$i]);
+                    
+                    $setSave = serialize($setSave);
+                    array_push($_SESSION['setDetails'], $setSave);
+                    
+
+                    
+                    
+                }
                 
                 $i++;
-                $setSave = serialize($setSave);
-                array_push($_SESSION['setDetails2'], $setSave);
+                
             }
             
             $query ="SELECT *
@@ -112,49 +135,105 @@
                 $id = $value['id'] - 1;
                 
                 $query2 = "SELECT ".$exerciseQuery." 
-                             FROM ".$exerciseRecord."
-                             WHERE ".$exerciseQuery." ='' ";
+                             FROM ".$exerciseRecord;
           
                 $result2 = mysqli_query($link, $query2);
                 $row = mysqli_fetch_array($result2);
-
                 
-                if (array_key_exists($exerciseQuery, $row)){
-                    
-                    header('Location: index.php');
-                    
-                    $query3 = "UPDATE ".$exerciseRecord."
-                                SET ".$exerciseQuery." = '".$_SESSION['setDetails2'][$id]."'
-                                WHERE ".$exerciseQuery." ='' 
-                                LIMIT 1";
+
+                if(array_key_exists($exerciseQuery, $row)){
+                
+                    $query2 = "SELECT ".$exerciseQuery." 
+                                 FROM ".$exerciseRecord."
+                                 WHERE ".$exerciseQuery." ='' ";
+              
+                    $result2 = mysqli_query($link, $query2);
+                    $row = mysqli_fetch_array($result2);
+    
+
+                    if (array_key_exists($exerciseQuery, $row)){
                         
-                    mysqli_query($link, $query3); 
-                    
-                    
+                        header('Location: index.php');
+                        
+                        $query3 = "UPDATE ".$exerciseRecord."
+                                    SET ".$exerciseQuery." = '".$_SESSION['setDetails'][$id]."'
+                                    WHERE ".$exerciseQuery." ='' 
+                                    LIMIT 1";
+                            
+                        mysqli_query($link, $query3); 
+                        
+                       
+                        
+                    } else {
+                          
+                        header('Location: index.php');  
+                            
+                        $query4 =   "INSERT INTO ".$exerciseRecord."
+                                    (".$exerciseQuery.")
+                                    VALUES ('".$_SESSION['setDetails'][$id]."')";
+                             
+                        mysqli_query($link, $query4);
+                
+                    }   
                     
                 } else {
-                      
-                    header('Location: index.php');  
+                    
+                    $query3 = "ALTER TABLE ".$exerciseRecord."
+                                ADD ".$exerciseQuery." TEXT NOT NULL DEFAULT('')";
+                    
+                    mysqli_query($link, $query3);
+                    
+                    $query2 = "SELECT ".$exerciseQuery." 
+                                 FROM ".$exerciseRecord."
+                                 WHERE ".$exerciseQuery." ='' ";
+              
+                    $result2 = mysqli_query($link, $query2);
+                    $row = mysqli_fetch_array($result2);
+    
+
+                    if (array_key_exists($exerciseQuery, $row)){
                         
-                    $query4 =   "INSERT INTO ".$exerciseRecord."
-                                (".$exerciseQuery.")
-                                VALUES ('".$_SESSION['setDetails2'][$id]."')";
-                         
-                    mysqli_query($link, $query4);
-                      echo $query;
-                }   
-            } 
-        
+                        header('Location: index.php');
+                        
+                        $query3 = "UPDATE ".$exerciseRecord."
+                                    SET ".$exerciseQuery." = '".$_SESSION['setDetails'][$id]."'
+                                    WHERE ".$exerciseQuery." ='' 
+                                    LIMIT 1";
+                            
+                        mysqli_query($link, $query3); 
+
+                  
+                       
+                    } else {
+                          
+                        header('Location: index.php');  
+                            
+                        $query4 =   "INSERT INTO ".$exerciseRecord."
+                                    (".$exerciseQuery.")
+                                    VALUES ('".$_SESSION['setDetails'][$id]."')";
+                             
+                        mysqli_query($link, $query4);
+
+                    }   
+                } 
+            }
+            
         }              
                     
                     
             
     if (isset($_GET['submit']) && $_GET['submit'] ==='Complete Workout') {
             
-            $query ="SELECT *
-                    FROM ".$level."_rpt_".$workout; 
+        
+        $query = "INSERT INTO notificationrecord(userid, notificationid, date_created, details) 
+                  VALUES(".$idHolder.", 2, '".$date."', ".$workoutName.")";
+                  
+        $result = mysqli_query($link, $query);
+            
+        $query ="SELECT *
+                FROM ".$level."_rpt_".$workout; 
 
-                $result = mysqli_query($link, $query);
+        $result = mysqli_query($link, $query);
             
             foreach($result as $value){
                 
@@ -162,37 +241,90 @@
                 $id = $value['id'] - 1;
                 
                 $query2 = "SELECT ".$exerciseQuery." 
-                             FROM ".$exerciseRecord."
-                             WHERE ".$exerciseQuery." ='' ";
+                             FROM ".$exerciseRecord;
           
                 $result2 = mysqli_query($link, $query2);
                 $row = mysqli_fetch_array($result2);
+                
+
+                if(array_key_exists($exerciseQuery, $row)){
+                
+                    $query2 = "SELECT ".$exerciseQuery." 
+                                 FROM ".$exerciseRecord."
+                                 WHERE ".$exerciseQuery." ='' ";
+              
+                    $result2 = mysqli_query($link, $query2);
+                    $row = mysqli_fetch_array($result2);
+    
 
                     if (array_key_exists($exerciseQuery, $row)){
-                    
+                        
                         header('Location: index.php');
-                    
+                        
                         $query3 = "UPDATE ".$exerciseRecord."
                                     SET ".$exerciseQuery." = '".$_SESSION['setDetails'][$id]."'
                                     WHERE ".$exerciseQuery." ='' 
                                     LIMIT 1";
+                            
+                        mysqli_query($link, $query3); 
+
                         
-                        mysqli_query($link, $query3);     
-                    
+                        
                     } else {
-                        
-                        header('Location: index.php');
-                        
+                          
+                        header('Location: index.php');  
+                            
                         $query4 =   "INSERT INTO ".$exerciseRecord."
                                     (".$exerciseQuery.")
                                     VALUES ('".$_SESSION['setDetails'][$id]."')";
-                         
-                            mysqli_query($link, $query4);
+                             
+                        mysqli_query($link, $query4);
+
                         
                     }   
-            }    
-        
-    }
+                    
+                } else {
+                    
+                    $query3 = "ALTER TABLE ".$exerciseRecord."
+                                ADD ".$exerciseQuery." TEXT NOT NULL DEFAULT('')";
+                    
+                    mysqli_query($link, $query3);
+                    
+                    $query2 = "SELECT ".$exerciseQuery." 
+                                 FROM ".$exerciseRecord."
+                                 WHERE ".$exerciseQuery." ='' ";
+              
+                    $result2 = mysqli_query($link, $query2);
+                    $row = mysqli_fetch_array($result2);
+    
+
+                    if (array_key_exists($exerciseQuery, $row)){
+                        
+                        header('Location: index.php');
+                        
+                        $query3 = "UPDATE ".$exerciseRecord."
+                                    SET ".$exerciseQuery." = '".$_SESSION['setDetails'][$id]."'
+                                    WHERE ".$exerciseQuery." ='' 
+                                    LIMIT 1";
+                            
+                        mysqli_query($link, $query3); 
+
+                           
+                        
+                    } else {
+                          
+                        header('Location: index.php');  
+                            
+                        $query4 =   "INSERT INTO ".$exerciseRecord."
+                                    (".$exerciseQuery.")
+                                    VALUES ('".$_SESSION['setDetails'][$id]."')";
+                             
+                        mysqli_query($link, $query4);
+                        
+                    }   
+                } 
+            }
+        }
             
     
 ?>
@@ -204,175 +336,32 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <script src="https://kit.fontawesome.com/83a74e8223.js" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap" rel="stylesheet">
    
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <link href="https://fonts.googleapis.com/css?family=Fira+Sans+Extra+Condensed:500|Noto+Sans:400,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <style>
-        
-        body{
-            
-            font-family: 'Noto Sans', sans-serif;
-            padding: 0;
-            margin: 0;
-            
-        }
-        
-        .row{
-            
-            margin-right: 0;
-            
-        }
-        
-        h1, h2, h3, h4 {
-
-            font-family: 'Fira Sans Extra Condensed', sans-serif;
-
-        }
-        
-        .headBanner{
-            
-            color: white;
-            background-color: #4EA5ED;
-            padding-left: 30px;
-            
-        }
-        
-        #avatar{
-            
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            position: relative;
- 
- 
-        }
-
-        #navBTN{
-            
-            position: absolute;
-            right: 11px;
-            border: 1px solid;
-            padding: 3px;
-            margin: 4px;
-        }
-        
-        .subHeader{
-            
-            padding-left: 15px;
-            
-        }
-        
-        .btn-next{
-            
-            background-color: #4EA5ED;
-            color: white;
-            font-weight: bold;
-            width: 150px;
-        }
-        
-        .btn-next:hover{
-            
-            color: white;
-            filter: brightness(80%);
-            
-        }
-        
-        .btn-back{
-            
-            background-color: black;
-            color: white;
-            font-weight: bold;
-            width: 150px;
-        }
-        
-        .btn-black:hover{
-            
-            color: white;
-            filter: brightness(80%);
-            
-        }
-        
-        .centered{
-            
-            text-align: center;
-            
-        }
-        
-        .margin-top{
-            
-            margin-top: 20px;
-            
-        }
-        
-        .inputBox{
-            
-            margin: 5px;
-            padding: 5px;
-            background-color: white;
-        }
-       
-       #setTrackNav{
-           
-           float: right;
-           position: absolute;
-           right: 15px;
-           text-align: center;
-           top: 25px;
-           
-       }
-      
-       .setTrackBTN{
-           
-           height: 30px;
-           width: 30px;
-           color: white;
-           font-size: 20px;
-           margin-top: 4%;
-           
-       }
-       
-       .setTrackDetails{
-           
-           padding: 0;
-           text-align: left;
-           width: 75px;
-           margin: 0px 10% 0px 20px;
-           font-weight: bold;
-           color: white;
-           background-color: #4EA5ED;
-           border: none;
-       }
-        
-        #tableDiv{
-            
-            height: 500px;
-            overflow-y: scroll;
-            
-        }
-        
-        td, th{
-            
-            padding-right: 5px;
-            
-        }
-        
-        .editTable{
-            
-            display: none;
-            
-        }
-        
-        .tableBox{
+    
+        .editTableBox, .tableBox{
             
             width: 30px;
-            height: 22px;
             padding: 0;
+            margin: 0;
             text-align: center;
-            border: none;
-       
+            border:none;
         }
         
+        .editTableBox:hover, .editTableBox:active {
+            
+            text-decoration: underline;
+            
+        }
+        
+        .weightInput{
+            
+            width: 50px;
+            
+        }
     </style>
 
     
@@ -380,35 +369,93 @@
   </head>
   <body>
     
- 
-    <div class="">
-		    <div class="headBanner row">
-		        <div id="setTrackNav">
-		            <a id="homeButton" class="setTrackBTN" href="index.php"><i class="fas fa-home"></i></a>
-                </div>
-                <h2 class="col-md-8 margin-top"> Workout Summary </h2>
-            </div>
-        <div class="container">  
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-0">
+			<div class="container col-md-8">		
+		  		<a class="navbar-brand align-middle pageTitle mx-0" href="index.html"> 
+					<img src="images/logo.png" class="headerLogo mr-2" alt="">
+		  			Welcome back!
+				</a>		  
+
+		  		<div>
+					<ul class="nav mx-0">
+						<li class="nav-item dropdown">
+							<a class="nav-link" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								<span class="emphasis">account</span>
+								<img id="avatar" src="images/avatar_mini.jpg" class="ml-2">
+							</a>
+
+							<div class="dropdown-menu bg-dark" aria-labelledby="navbarDropdown">
+								<p class="emphasis text-center"> Logged in as: <br> <?php echo $userName ?></p>
+								<div class="dropdown-divider"></div>
+								<a class="dropdown-item emphasis" href="account.php">my account</a>
+								<div class="dropdown-divider"></div>
+								<a class="dropdown-item">
+									<form method="post">
+										<input type ="submit" class="dropdown-item emphasis" name="logout" value="Logout">
+									</form>
+								</a>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+		    
+		    
+		    
+		    
+        <div class="container col-md-8 mt-4">
+            <h1>Workout summary</h1>
+            <p>Make sure it all looks right before you save it</p>
+            
+            
             <form method="post">
                 <div id="tableDiv">
-                    <table class="margin-top displayTable"> 
+                    <table class="displayTable"> 
                         <?php echo $workoutTable; ?>
                     </table>
                     
-                    <table class="margin-top editTable">
+                    <table class="editTable">
                         <?php echo $editTable; ?>
                     </table>
                 </div>
-                <input  type ="submit" class="btn btn-back margin-top editTable" value="Confirm" id="confirm" name="submit">
+                <input  type ="submit" class="button editTable float-right col-md-2 mb-5" value="Confirm" id="confirm" name="submit">
             </form>
             
             <form method="get">
-                <input  class="btn btn-back margin-top displayTable" value="Edit Workout" id="editBTN">
-                <input  type ="submit" class="btn btn-next margin-top displayTable" value="Complete Workout" id="completeBTN" name="submit">
+                <input  class="btn font-weight-bold displayTable float-left mb-2 text-lg-left col-lg-3" value="Edit Workout" id="editBTN">
+                <input  type ="submit" class="button displayTable col-lg-3 text-center float-right mb-5" value="Complete Workout" id="completeBTN" name="submit">
             </form>
         </div>
-    </div>
-    
+        
+    <nav class="nav fixed-bottom navbar-expand-lg navbar-dark bg-dark p-1">
+			<ul class="navbar-nav d-flex flex-row bd-highlight w-100">
+				<li class="nav-item w-25 text-center py-1">
+					<a href="index.php" class="nav-link emphasis d-none d-sm-inline" id="navDash"> dashboard </a>
+                    <a href="index.php" class="nav-link emphasis d-inline d-sm-none" id="navDash">
+                        <i class="fas fa-tachometer-alt" style="font-size: 25px;"></i>				
+				    </a>
+				</li>
+				<li class="nav-item w-25 text-center py-1">
+					<a href="stats.php" class="nav-link emphasis d-none d-sm-inline" id="navProg"> progress </a>
+    	       	    <a href="stats.php" class="nav-link emphasis d-inline d-sm-none" id="navProg">
+    	       	        <i class="fas fa-chart-line" style="font-size: 25px;"></i>
+    	       	    </a>
+    	       	</li>
+				<li class="nav-item w-25 text-center py-1">
+					<a href="select_workout.php" class="nav-link emphasis d-none d-sm-inline active" id="navTrain"> add a workout </a>	
+	           	    <a href="select_workout.php" class="nav-link emphasis d-inline d-sm-none " id="navTrain">
+	           	        <i class="fas fa-dumbbell active-sm" style="font-size: 25px;"></i>
+	           	    </a>
+	           	</li>
+				<li class="nav-item w-25 text-center py-1">
+					<a href="learn.php" class="nav-link emphasis d-none d-sm-inline" id="navLearn"> learn </a>
+				    <a href="learn.php" class="nav-link emphasis d-inline d-sm-none" id="navLearn">
+				        <i class="fas fa-glasses" style="font-size: 25px;"></i></a>
+				    </a>
+				</li>
+			</ul>
+		</nav>
     
     
     

@@ -7,7 +7,7 @@
     $_SESSION['level'] = "";
     
    
-   if (isset($submit) && $submit == "Back"){
+   if (isset($submit) && $submit == "back"){
        
        header("Location: index.php");
               
@@ -78,7 +78,7 @@
 
 		  		<div>
 					<ul class="nav mx-0">
-						<li class="nav-item dropleft">
+						<li class="nav-item dropdown">
 							<a class="nav-link" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 								<span class="emphasis">account</span>
 								<img id="avatar" src="images/avatar_mini.jpg" class="ml-2">
@@ -87,7 +87,7 @@
 							<div class="dropdown-menu bg-dark" aria-labelledby="navbarDropdown">
 								<p class="emphasis text-center"> Logged in as: <br> <?php echo $userName ?></p>
 								<div class="dropdown-divider"></div>
-								<a class="dropdown-item emphasis" href="account.html">my account</a>
+								<a class="dropdown-item emphasis" href="account.php">my account</a>
 								<div class="dropdown-divider"></div>
 								<a class="dropdown-item">
 									<form method="post">
@@ -109,7 +109,7 @@
 
                 
 				<form method="$_GET">
-                   <div class="activityBlock p-4 mb-3 text-center">
+                   <div class="activityBlock text-center">
                         <h4 class="font-weight-bold"> Select a phase </h4>
 					   
 					    <button id="planSelectBeginner" type="button" class="btn font-weight-bold bg-white m-3 selectButton planSelect selectButton-active"> 
@@ -131,7 +131,7 @@
 					   </button>
 					</div> 
 					
-                    <div class="activityBlock p-4 mb-3 text-center"> 
+                    <div class="activityBlock text-center"> 
 						<h4 class="font-weight-bold"> Select a workout </h4>						
 						<button id="sessionSelectBeginner" name="sessionSelect" type="button" value="upper body 1" class="btn  font-weight-bold bg-white m-3 selectButton sessionSelect selectButton-active"> 
 							<i class="fas fa-arrow-circle-up emphasis my-4" style="font-size: 50px;"> </i><br> 
@@ -159,35 +159,36 @@
             </form>
 		  </div>
     </div>
+    <div id="bottomNav">
 	  <nav class="nav fixed-bottom navbar-expand-lg navbar-dark bg-dark p-1">
 				<ul class="navbar-nav d-flex flex-row bd-highlight w-100">
 					<li class="nav-item w-25 text-center py-1">
 						<a href="index.php" class="nav-link emphasis d-none d-sm-inline" id="navDash"> dashboard </a>
                         <a href="index.php" class="nav-link emphasis d-inline d-sm-none" id="navDash">
-                            <i class="fas fa-tachometer-alt" style="font-size: 30px;"></i>				
+                            <i class="fas fa-tachometer-alt" style="font-size: 25px;"></i>				
 					    </a>
 					</li>
 					<li class="nav-item w-25 text-center py-1">
 						<a href="stats.php" class="nav-link emphasis d-none d-sm-inline" id="navProg"> progress </a>
     	        	    <a href="stats.php" class="nav-link emphasis d-inline d-sm-none" id="navProg">
-    	        	        <i class="fas fa-chart-line" style="font-size: 30px;"></i>
+    	        	        <i class="fas fa-chart-line" style="font-size: 25px;"></i>
     	        	    </a>
     	        	</li>
 					<li class="nav-item w-25 text-center py-1">
 						<a href="select_workout.php" class="nav-link emphasis d-none d-sm-inline active" id="navTrain"> add a workout </a>	
 	            	    <a href="select_workout.php" class="nav-link emphasis d-inline d-sm-none " id="navTrain">
-	            	        <i class="fas fa-dumbbell active-sm" style="font-size: 30px;"></i>
+	            	        <i class="fas fa-dumbbell active-sm" style="font-size: 25px;"></i>
 	            	    </a>
 	            	</li>
 					<li class="nav-item w-25 text-center py-1">
 						<a href="learn.php" class="nav-link emphasis d-none d-sm-inline" id="navLearn"> learn </a>
 					    <a href="learn.php" class="nav-link emphasis d-inline d-sm-none" id="navLearn">
-					        <i class="fas fa-glasses" style="font-size: 30px;"></i></a>
+					        <i class="fas fa-glasses" style="font-size: 25px;"></i></a>
 					    </a>
 					</li>
 				</ul>
 			</nav>
-    
+        </div>
      
         
         

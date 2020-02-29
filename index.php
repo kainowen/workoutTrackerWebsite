@@ -74,11 +74,12 @@
         $result2 = mysqli_query($link, $query2);
         $row = mysqli_fetch_array($result2);
         $date = explode(" ", $value["date_created"]);
-       
-        $notification = "<div class='activityBlock p-3 mb-3'>
+        $newDate = date("d/m/y", strtotime($date[0]));
+        $newTime =date("H:i", strtotime($date[1]));
+        $notification = "<div class='activityBlock'>
 					        <p class='font-weight-bold'><i class='fas fa-check emphasis pr-2'></i>".$row['title']."</p>
 					        <p class='px-4'>".$row['body']." ".$value['details']."</p>
-					        <p class='px-4'> <small><span class='pr-2'>".$date[1]."</span><span>".$date[0]."</span></small></p>
+					        <p class='px-4'> <small><span class='pr-2'>".$newTime."</span><span>".$newDate."</span></small></p>
 				        </div>";
         
         array_push($notificationArray, $notification); 
@@ -165,36 +166,36 @@
     	</div>
     </div>
     
-        
+    <div id="navbar-bottom-source">
     <nav class="nav fixed-bottom navbar-expand-lg navbar-dark bg-dark p-1">
 		<ul class="navbar-nav d-flex flex-row bd-highlight w-100">
 			<li class="nav-item w-25 text-center py-1">
 				<a href="index.php" class="nav-link emphasis d-none d-sm-inline active" id="navDash"> dashboard </a>
                 <a href="index.php" class="nav-link emphasis d-inline d-sm-none" id="navDash">
-                    <i class="fas fa-tachometer-alt active-sm" style="font-size: 30px;"></i>				
+                    <i class="fas fa-tachometer-alt active-sm" style="font-size: 25px;"></i>				
 			    </a>
 			</li>
 			<li class="nav-item w-25 text-center py-1">
 				<a href="stats.php" class="nav-link emphasis d-none d-sm-inline" id="navProg"> progress </a>
     	        <a href="stats.php" class="nav-link emphasis d-inline d-sm-none" id="navProg">
-    	            <i class="fas fa-chart-line" style="font-size: 30px;"></i>
+    	            <i class="fas fa-chart-line" style="font-size: 25px;"></i>
     	        </a>
     	    </li>
 			<li class="nav-item w-25 text-center py-1">
 				<a href="select_workout.php" class="nav-link emphasis d-none d-sm-inline" id="navTrain"> add a workout </a>	
 	       	    <a href="select_workout.php" class="nav-link emphasis d-inline d-sm-none" id="navTrain">
-	                <i class="fas fa-dumbbell" style="font-size: 30px;"></i>
+	                <i class="fas fa-dumbbell" style="font-size: 25px;"></i>
 	            </a>
 	        </li>
 			<li class="nav-item w-25 text-center py-1">
 				<a href="learn.php" class="nav-link emphasis d-none d-sm-inline" id="navLearn"> learn </a>
 			    <a href="learn.php" class="nav-link emphasis d-inline d-sm-none" id="navLearn">
-			        <i class="fas fa-glasses" style="font-size: 30px;"></i></a>
+			        <i class="fas fa-glasses" style="font-size: 25px;"></i></a>
 			    </a>
 			</li>
 		</ul>
 	</nav>
-      
+    </div>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
