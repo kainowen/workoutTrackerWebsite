@@ -4,7 +4,7 @@
 
     $userId = $_COOKIE['workoutTracker'];
     $email = $_SESSION['email'];
-
+    $incorrectPW = [];
     if (isset($_POST["logout"])){
 
         setcookie("workoutTracker", "", time()- 3600, "/");
@@ -112,7 +112,7 @@
             
         } else {
             
-            array_push($alert, 'Invalid password');
+            array_push($incorrectPW, 'Invalid password');
     
         }
      
@@ -123,7 +123,7 @@
 <!doctype html>
 <html lang="en">
   <head>
-
+ 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     
@@ -171,7 +171,6 @@
 	<div class="row mt-4 mx-0">
 		<div class="col-md-8 container p-4">
 		    <div>
-		        <div><?php if(array_key_exists(0, $alert)){echo "<div class='alert alert-danger'>".$alert[0]."</div>";} ?></div>
                 <div><?php if(array_key_exists(0, $success)){echo "<div class='alert alert-success'>".$success[0]."</div>";} ?></div>
             </div>
             <h1> Your account </h1>
@@ -181,17 +180,17 @@
 				<div class="activityBlock p-4 mb-3">
 					<h4 class="font-weight-bold"> Details </h4>
 						
-					<p class="w-75"> Name:
+					<p class="w-100"> Name:
 						<span class="font-weight-bold"> <?php echo $_SESSION['name'];?> </span>
                     	<span id="nameUpdate" class="emphasis float-right pointer"> update </span> 	
 					</p>
-					<input id="namePopup" type="name" class="textInput mb-3 editToggle" placeholder="enter your name" name="newEmail">        
+					<input id="namePopup" type="name" class="textInput mb-3 editToggle col-lg-5" placeholder="enter your name" name="newEmail">        
              	
-					<p class="w-75"> email:
+					<p class="w-100"> email:
 						<span class="font-weight-bold pr-1"> <?php echo $_SESSION['email'];?></span>
                         <span id="emailUpdate" class="emphasis float-right pointer"> update </span> 
                     </p>
-					<input id="emailPopup" type="email" class="textInput editToggle" placeholder="enter your email address" name="newEmail">        
+					<input id="emailPopup" type="email" class="textInput editToggle col-lg-5" placeholder="enter your email address" name="newEmail">        
 				</div>
                 
 				<div class="activityBlock p-4 mb-3">
@@ -199,20 +198,31 @@
 					<p> Make sure your new password is <strong>safe and memorable</strong></p>
 
 					<label for="newPassword"> new password: </label><br>
-                   	<input class ="textInput mb-3 col-lg-3" type="password" placeholder="enter new password" name="newPassword"><br>
+                   	<input class ="textInput mb-3 col-lg-5" type="password" placeholder="enter new password" name="newPassword"><br>
 
 
 					<label for="newPasswordConfirm"> confirm new password: </label><br>
-					<input class ="textInput mb-3 col-lg-3" type="password" placeholder="re-enter new password..." name="newPasswordConfirm">	
+					<input class ="textInput mb-3 col-lg-5" type="password" placeholder="re-enter new password..." name="newPasswordConfirm">	
 
                 </div>
                 
 				<div class="activityBlock p-4 mb-5 bg-dark text-white clearfix">
                     <h4 class="font-weight-bold" > Update and save </h4>
 					<p>For security purposes please enter your <strong> current </strong> password</p>
-					
-					<label for="currentPassword"> current password: </label><br>
-					<input class ="textInput my-2 mr-4 col-lg-4" id="currentPassword" type="password" name="currentPassword" placeholder="enter current password">
+				
+					    <label for="currentPassword"> current password: </label><br>
+					    <input class ="textInput my-2 mr-4 col-lg-5" id="currentPassword" type="number" name="currentPassword" placeholder="enter current password">
+					    <div>
+    					    <?php
+    					   
+    					        if (isset($incorrectPW[0])){
+    					       
+    					            echo "<div class='alerts col-lg-5'> this password is incorrect </div>";
+    					       
+    					        }
+    					
+    					    ?>
+					</div>
 					<input type="submit" name="save" class="button float-right mt-2 col-lg-3" value="save updates">
 
                 </div>
@@ -225,25 +235,25 @@
 			<li class="nav-item w-25 text-center py-1">
 				<a href="index.php" class="nav-link emphasis d-none d-sm-inline active" id="navDash"> dashboard </a>
                 <a href="index.php" class="nav-link emphasis d-inline d-sm-none" id="navDash">
-                    <i class="fas fa-tachometer-alt active-sm" style="font-size: 30px;"></i>				
+                    <i class="fas fa-tachometer-alt active-sm" style="font-size: 25px;"></i>				
 			    </a>
 			</li>
 			<li class="nav-item w-25 text-center py-1">
 				<a href="stats.php" class="nav-link emphasis d-none d-sm-inline" id="navProg"> progress </a>
     	        <a href="stats.php" class="nav-link emphasis d-inline d-sm-none" id="navProg">
-    	            <i class="fas fa-chart-line" style="font-size: 30px;"></i>
+    	            <i class="fas fa-chart-line" style="font-size: 25px;"></i>
     	        </a>
     	    </li>
 			<li class="nav-item w-25 text-center py-1">
 				<a href="select_workout.php" class="nav-link emphasis d-none d-sm-inline" id="navTrain"> add a workout </a>	
 	       	    <a href="select_workout.php" class="nav-link emphasis d-inline d-sm-none" id="navTrain">
-	                <i class="fas fa-dumbbell" style="font-size: 30px;"></i>
+	                <i class="fas fa-dumbbell" style="font-size: 25px;"></i>
 	            </a>
 	        </li>
 			<li class="nav-item w-25 text-center py-1">
 				<a href="learn.php" class="nav-link emphasis d-none d-sm-inline" id="navLearn"> learn </a>
 			    <a href="learn.php" class="nav-link emphasis d-inline d-sm-none" id="navLearn">
-			        <i class="fas fa-glasses" style="font-size: 30px;"></i></a>
+			        <i class="fas fa-glasses" style="font-size: 25px;"></i></a>
 			    </a>
 			</li>
 		</ul>

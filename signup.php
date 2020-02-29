@@ -7,8 +7,8 @@
     $cookies = $_POST["cookies"];
     $hash = password_hash($password, PASSWORD_DEFAULT);
     $_SESSION["email"] = $email;
-    $errors=[];
-
+    $emailErrors=[];
+    $passwordErrors=[];
     if (isset($_COOKIE['workoutTracker'])){
         
         header("Location: index.php");
@@ -18,11 +18,11 @@
 
         if($email === ""){
             
-            array_push($errors, "please enter a valid email address");
+            array_push($emailErrors, "please enter a valid email address");
             
         } else if ($password === ""){
             
-            array_push($errors, "Please enter a password");
+            array_push($passwordErrors, "Please enter a password");
             
         } else {
             
@@ -46,7 +46,7 @@
                 
                 if ($row > 1){
                     
-                    array_push($errors,  "The email address ".$email." is already in use.");
+                    array_push($emailErrors,  "This email address is already in use.");
                         
                     
                 } else {
@@ -104,7 +104,7 @@
             
                     if($row["email"] == ""){
                         
-                        array_push($errors, "This username does not exist");
+                        array_push($emailErrors, "this account doesn't exist");
                         
                     } else if ($verify = password_verify($password, $row["password"])){
                 
@@ -128,7 +128,7 @@
                        
                 } else {
                         
-                    array_push($errors, "Email and password do not match <br>");
+                    array_push($passwordErrors, "these details don't match <br>");
 
                 }
                     
@@ -145,49 +145,55 @@
 
     	<meta charset="utf-8">
     	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <script src="https://kit.fontawesome.com/83a74e8223.js" crossorigin="anonymous"></script>
     	<link href="https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap" rel="stylesheet">
-    
-	  	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     	<link rel="stylesheet" href="style.css">
-
+        <style>
+            input{
+              
+                
+            }
+        </style>
     
     	<title>My Muscle Gain Plan</title>
   	</head>
  	<body>
-	<div id="background" class="m-0">
-		<div id="signUpBody" class="container">
+	<div id="background">
+		<div id="signUpBody" class="container col-md-6">
 			<img id="logo" src="images/logo.png" class="p-4">
 				<h1>My Workout Tracker </h1>
 				<p> Register today to find a workout plan that's 
 				<span class="emphasis"> right for you </span> to reach <span class="emphasis"> your full potential</span></p>
 	
-
+ 
 				<div class="logSignBox">
-					<div class="errors">  
-						<div> 
-						    <p>
-						        <?php
-                    
-                                    foreach($errors as $key => $value){
-                                        echo '<div class="alert alert-danger"><strong>'.$value.'</strong></div>';
-                                        
-                                    }
-                        
-                                ?>
-						    </p>
-						</div>
-					</div>
-
 					<form method='post'>
-						<div class="form-group signUpElements" >
-							<div class="inputShell ">
-								<label for="signUpInputEmail" >email address:</label>
-								<input type="email" class="textInput col-sm" id="signUpInputEmail" aria-describedby="emailHelp" placeholder="name@example.com" name="email">
+						<div class="form-group signUpElements col-md">
+							<div class="inputShell mb-3">
+								<label for="signUpInputEmail" class="input-label">email address:</label><br>
+								<input type="email" class="textInput w-100" id="signUpInputEmail" aria-describedby="emailHelp" placeholder="name@example.com" name="email">
+            						<?php
+                                            
+                                        foreach($emailErrors as $key => $value){
+                                                 
+                                            echo '<div class="alerts"><i class="fas fa-exclamation-circle"></i>'.$value.'</div>';
+                                                
+                                        }
+                                    ?>
 							</div>
 
-							<div class="inputShell">
-								<label for="signUpInputPassword1"> password:</label>
-								<input type="password" class="textInput col-sm" id="signUpInputPassword1" placeholder="enter a password..." name="password">
+							<div class="inputShell mb-3">
+								<label for="signUpInputPassword1" class="input-label"> password:</label><br>
+								<input type="password" class="textInput w-100" id="signUpInputPassword1" placeholder="enter a password..." name="password">
+            						<?php
+                                            
+                                        foreach($passwordErrors as $key => $value){
+                                                 
+                                            echo '<div class="alerts"><i class="fas fa-exclamation-circle"></i>'.$value.'</div>';
+                                                
+                                        }
+                                    ?>
 							</div>
 
 								<label for="signUpCookies" class=""><strong> Stay Logged in? </strong></label>
@@ -202,18 +208,34 @@
 
 
 					<form method='post'>
-						<div class="form-group logInElements">
-							<div class="inputShell">
-								<label for="logInInputEmail" >email address:</label>
-								<input type="email" class="textInput col-sm" id="logInInputEmail" aria-describedby="emailHelp" placeholder="name@example.com" name="email">
+						<div class="form-group logInElements col-md">
+							<div class="inputShell mb-3">
+								<label for="logInInputEmail" class="input-label">email address:</label><br>
+								<input type="email" class="textInput w-100" id="logInInputEmail" aria-describedby="emailHelp" placeholder="name@example.com" name="email">
+            						<?php
+                                            
+                                        foreach($emailErrors as $key => $value){
+                                                 
+                                            echo '<div class="alerts"><i class="fas fa-exclamation-circle"></i>'.$value.'</div>';
+                                            
+                                        }
+                                    ?>
 							</div>
 
-							<div class="inputShell">
-								<label for="logInInputPassword"> password:</label>
-								<input type="password" class="textInput col-sm" id="logInInputPassword" placeholder="enter a password..." name="password">
+							<div class="inputShell mb-3">
+								<label for="logInInputPassword" class="input-label">password:</label><br>
+								<input type="password" class="textInput w-100" id="logInInputPassword" placeholder="enter a password..." name="password">
+            						<?php
+                                            
+                                        foreach($passwordErrors as $key => $value){
+                                                 
+                                            echo '<div class="alerts"><i class="fas fa-exclamation-circle"></i>'.$value.'</div>';
+                                                
+                                        }
+                                    ?>
 							</div>
 
-								<label for="logInCookies"><strong> Stay Logged in? </strong></label>
+								<label for="logInCookies" class=""><strong> Stay Logged in? </strong></label>
 								<input type="checkbox" id="logInCookies" value="yes" name="cookies[]" checked> 
 							<br>
 							<input type="submit" class="button px-5" value ="Log In" name="logIn">
@@ -222,14 +244,14 @@
 
 
 
-					<p class="signUpElements pb-5 mb-0"> Already have an account?<a href="#" class="emphasis signUpElements logSignSwitch" id="logInSelect"> Log-In </a></p>
-					<p class="logInElements pb-5 mb-0"> Don't have an account?<a href="#" class="emphasis logInElements logSignSwitch" id="signUpSelect"> Sign-Up </a></p>
+					<p class="signUpElements mb-0 pb-5"> Already have an account?<a href="#" class="emphasis signUpElements logSignSwitch" id="logInSelect"> Log-In </a></p>
+					<p class="logInElements mb-0 pb-5"> Don't have an account?<a href="#" class="emphasis logInElements logSignSwitch" id="signUpSelect"> Sign-Up </a></p>
 
 			  </div>  
 	  	</div>
 	</div>	  
 		  <div id="footer" class="align-middle"> 
-			  <p class="py-2  m-0">designed + built by 
+			  <p class="py-2 m-0">designed + built by 
 				  <span class="emphasis">liam kain owen</span>
 			  </p>
 		  </div>
