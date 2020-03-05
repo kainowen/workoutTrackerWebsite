@@ -3,20 +3,6 @@
     session_start();
 
     $alert = [];
-    $userId = $_COOKIE['workoutTracker'];
-    $email = $_SESSION['email'];
-    $setDetails1=[];
-    $setDetails2=[];
-    $_SESSION['setDetails'] = [];
-    $_SESSION['setDetails2'] = [];
-    $_SESSION['level'] = "";
-    
-    if (isset($_POST["logout"])){
-
-        setcookie("workoutTracker", "", time()- 3600, "/");
-        header("Location: signup.php");
-
-    }
     
     $link = mysqli_connect("shareddb-s.hosting.stackcp.net", "myusers-3132359bf0", "SAb.DCIPW}'c", "myusers-3132359bf0");
 
@@ -25,36 +11,9 @@
         die('Connect Error: ' . mysqli_connect_error());
     }
 
-    
-    if (isset($_COOKIE['workoutTracker']) || $_SESSION['email']){
+    include "logincheck.php";
+    include "workoutreset.php";
 
-        $query = "SELECT id, email, Name
-                    FROM myusers
-                    WHERE id ='".$userId."'";
-                  
-        $result = mysqli_query($link, $query);
-        $row = mysqli_fetch_array($result);
-        
-        $_SESSION['id'] = $row['id'];
-        $_SESSION['email'] = $row['email'];
-        $_SESSION['name'] = $row['Name'];
-        
-        if (array_key_exists('email', $row) && $row['Name'] !== ""){
-                        
-            $userName = $row['Name'];
-            
-        } else if (array_key_exists('email', $row) && $row['Name'] === ""){
-                        
-            $userName = $row['email'];
-            
-        } 
-        
-    }  else {
-            
-        header("Location: signup.php");
-            
-    }
-    
     $notificationArray=[];
     
     $query = "SELECT *

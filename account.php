@@ -1,17 +1,10 @@
 <?php
     
     session_start();
-
-    $userId = $_COOKIE['workoutTracker'];
-    $email = $_SESSION['email'];
-    $incorrectPW = [];
-    if (isset($_POST["logout"])){
-
-        setcookie("workoutTracker", "", time()- 3600, "/");
-        header("Location: signup.php");
-
-    }
     
+    $incorrectPW = [];
+    $details = "";
+
     $link = mysqli_connect("shareddb-s.hosting.stackcp.net", "myusers-3132359bf0", "SAb.DCIPW}'c", "myusers-3132359bf0");
 
     if (!$link) {
@@ -19,36 +12,9 @@
         die('Connect Error: ' . mysqli_connect_error());
     }
 
-    
-    if (isset($_COOKIE['workoutTracker']) || $_SESSION['email']){
+    include "logincheck.php";
+    include "workoutreset.php";
 
-        $query = "SELECT id, email, Name
-                    FROM myusers
-                    WHERE id ='".$userId."'";
-                  
-        $result = mysqli_query($link, $query);
-        $row = mysqli_fetch_array($result);
-        
-        $_SESSION['id'] = $row['id'];
-        $_SESSION['email'] = $row['email'];
-        $_SESSION['name'] = $row['Name'];
-        
-        if (array_key_exists('email', $row) && $row['Name'] !== ""){
-                        
-            $userName = $row['Name'];
-            
-        } else if (array_key_exists('email', $row) && $row['Name'] === ""){
-                        
-            $userName = $row['email'];
-            
-        } 
-        
-    }  else {
-            
-        header("Location: signup.php");
-            
-    }
-    
     $success = [];
     $alert = [];
     
@@ -76,6 +42,14 @@
                     mysqli_query($link, $query);
                     
                     array_push($success, "Password Changed Successfully");
+                
+                    $details .= "password, ";
+
+                    
+                } else {
+                
+                    $passwordUpdateAlert = 1;
+                
                 }
                   
             }
@@ -93,6 +67,8 @@
                             
                 array_push($success, "Email Changed Successfully");    
 
+                $details .= "email, ";
+
             }
             
             if(isset($_POST['newName']) && $_POST['newName'] !== "" ){
@@ -107,15 +83,27 @@
                             
                 array_push($success, "Name Changed Successfully");    
 
+                $details .= "name, ";
+
+
             }
             
+        $details = substr($details, 0, -2);
+        $details .= '.';
+
+        $date = date('Y/m/d H:i:s', time());
+     
+        $query = "INSERT INTO notificationrecord(userid, notificationid, date_created, details) 
+                  VALUES(".$userId.", 5, '".$date."', '".$details."')";
+                  
+        $result = mysqli_query($link, $query);
             
         } else {
             
             array_push($incorrectPW, 'Invalid password');
     
         }
-     
+        
     } 
   
 ?>
@@ -145,7 +133,7 @@
 
 		  		<div>
 					<ul class="nav mx-0">
-						<li class="nav-item dropleft">
+						<li class="nav-item dropdown">
 							<a class="nav-link" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 								<span class="emphasis">account</span>
 								<img id="avatar" src="images/avatar_mini.jpg" class="ml-2">
@@ -184,7 +172,7 @@
 						<span class="font-weight-bold"> <?php echo $_SESSION['name'];?> </span>
                     	<span id="nameUpdate" class="emphasis float-right pointer"> update </span> 	
 					</p>
-					<input id="namePopup" type="name" class="textInput mb-3 editToggle col-lg-5" placeholder="enter your name" name="newEmail">        
+					<input id="namePopup" type="text" class="textInput mb-3 editToggle col-lg-5" placeholder="enter your name" name="newName">        
              	
 					<p class="w-100"> email:
 						<span class="font-weight-bold pr-1"> <?php echo $_SESSION['email'];?></span>
@@ -197,34 +185,43 @@
                     <h4 class="font-weight-bold"> Update Password </h4>
 					<p> Make sure your new password is <strong>safe and memorable</strong></p>
 
-					<label for="newPassword"> new password: </label><br>
-                   	<input class ="textInput mb-3 col-lg-5" type="password" placeholder="enter new password" name="newPassword"><br>
+                    <div class="inputShell">
+				    	<label for="newPassword"> new password: </label><br>
+                    	<input class ="textInput mb-3 col-lg-5" type="password" placeholder="enter new password" name="newPassword"><br>
 
-
-					<label for="newPasswordConfirm"> confirm new password: </label><br>
-					<input class ="textInput mb-3 col-lg-5" type="password" placeholder="re-enter new password..." name="newPasswordConfirm">	
-
+					    <label for="newPasswordConfirm"> confirm new password: </label><br>
+				    	<input class ="textInput mb-3 col-lg-5" type="password" placeholder="re-enter new password..." name="newPasswordConfirm">	
+    			    
+    					    <?php
+    					   
+    					        if(isset($passwordUpdateAlert)){
+    					       
+    					            echo "<div class='alerts col-lg-5'><i class='fas fa-exclamation-circle'></i> passwords don't match </div>";
+    					       
+    					        }
+    					    
+    				         ?>
+                    </div>   
                 </div>
-                
+
 				<div class="activityBlock p-4 mb-5 bg-dark text-white clearfix">
                     <h4 class="font-weight-bold" > Update and save </h4>
 					<p>For security purposes please enter your <strong> current </strong> password</p>
-				
-					    <label for="currentPassword"> current password: </label><br>
-					    <input class ="textInput my-2 mr-4 col-lg-5" id="currentPassword" type="number" name="currentPassword" placeholder="enter current password">
-					    <div>
-    					    <?php
+				        
+				        <div class="inputShell my-2">
+					        <label for="currentPassword"> current password: </label><br>
+					        <input class ="textInput col-lg-5" id="currentPassword" type="password" name="currentPassword" placeholder="enter current password">
+    					        <?php
     					   
-    					        if (isset($incorrectPW[0])){
+    					            if (isset($incorrectPW[0])){
     					       
-    					            echo "<div class='alerts col-lg-5'> this password is incorrect </div>";
+    					                echo "<div class='alerts col-lg-5'><i class='fas fa-exclamation-circle'></i> incorrect password </div>";
     					       
-    					        }
+    					            }
     					
-    					    ?>
-					</div>
+    					        ?>
+					    </div>
 					<input type="submit" name="save" class="button float-right mt-2 col-lg-3" value="save updates">
-
                 </div>
             </form>
 		</div>

@@ -2,11 +2,13 @@
 
     session_start();
   
+    include "logincheck.php";
+    include "workoutreset.php";
+
+
     $submit = $_GET["submit"];
     $setOrder = 1;
-    $_SESSION['level'] = "";
-    
-   
+
    if (isset($submit) && $submit == "back"){
        
        header("Location: index.php");
@@ -20,8 +22,6 @@
             $level = str_replace(" ", "", $level);
         $workout = strtolower(str_replace("Body", "", $workoutSelect));
             $workout = str_replace(" ", "", $workout);
-       
-       $link = mysqli_connect("shareddb-s.hosting.stackcp.net", "myusers-3132359bf0", "SAb.DCIPW}'c", "myusers-3132359bf0");
        
        if (!$link) {
            

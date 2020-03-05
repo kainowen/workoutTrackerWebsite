@@ -22,6 +22,7 @@
             
         }    
             
+    include "logincheck.php";
         
         $query ="SELECT *
                 FROM ".$level."_rpt_".$workout; 
@@ -404,7 +405,7 @@
 		    
 		    
 		    
-        <div class="container col-md-8 mt-4">
+        <div class="container col-md-8 my-4">
             <h1>Workout summary</h1>
             <p>Make sure it all looks right before you save it</p>
             
@@ -419,12 +420,12 @@
                         <?php echo $editTable; ?>
                     </table>
                 </div>
-                <input  type ="submit" class="button editTable float-right col-md-2 mb-5" value="Confirm" id="confirm" name="submit">
+                <input  type ="submit" class="button editTable float-right col-md-2 mb-4" value="Confirm" id="confirm" name="submit">
             </form>
             
-            <form method="get">
+            <form method="get" class="clearfix mt-2 mb-5">
                 <input  class="btn font-weight-bold displayTable float-left mb-2 text-lg-left col-lg-3" value="Edit Workout" id="editBTN">
-                <input  type ="submit" class="button displayTable col-lg-3 text-center float-right mb-5" value="Complete Workout" id="completeBTN" name="submit">
+                <input  type ="submit" class="button displayTable col-lg-3 text-center float-right" value="Complete Workout" id="completeBTN" name="submit">
             </form>
         </div>
         

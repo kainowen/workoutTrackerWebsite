@@ -1,3 +1,11 @@
+<?php
+
+    include "logincheck.php";
+    include "workoutreset.php";
+
+
+?>
+
 <!doctype html>
 <html lang="en">
   <head>
