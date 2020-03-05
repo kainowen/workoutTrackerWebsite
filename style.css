@@ -1,19 +1,24 @@
 body{
-	
-	font-size: 1rem;
+    
+    padding: 0;   
+    margin: 0;
 	font-family: 'Montserrat' ;
-	height: 100%;
-	width: 100%;
 
 }
+
+
+
 
 #background{
 
 	background: url("images/backgroundimage.jpg");
 	background-size: cover;
 	background-repeat: no-repeat;	
+	background-color: black;
 	
 }
+
+
 
 #signUpBody{
 	
@@ -60,13 +65,14 @@ h2{
 	border: solid #EFEFEF 1px;
 	padding-left: 30px;
     margin-bottom: 15px;
+    z-index: 1;
+    
 }
 
-.textInput:hover, .numberInput:hover{
+.textInput:hover, .textInput:focus, .numberInput:hover, .numberInput:focus{
 	
 	border: solid 3px #00ECFF;
-	padding-left: 28px;
-	height: 46px;
+	padding-left: 27px;
 }
 
 
@@ -88,12 +94,24 @@ h2{
 	
 }
 
-input, input:active, input:hover, select, select:active, select:hover{
+input, input:focus, input:hover, select, select:focus, select:hover{
 	        
     outline: none;
 	outline:0;
 }
 
+#cookieConsent{
+                    
+    width: 100%;
+    background-color: black;
+    z-index: 1;
+    position: fixed;
+    bottom: 0px;
+    color: white;
+    padding: 20px;
+    border: solid 1px gray;
+                        
+}
 
 #footer{
 
@@ -113,7 +131,7 @@ input, input:active, input:hover, select, select:active, select:hover{
 	
 	#signUpBody{
 		
-		padding: 50px 20px 50px 20px;
+		padding: 50px 20px 30px 20px;
 		
 	}
 	
@@ -131,6 +149,12 @@ input, input:active, input:hover, select, select:active, select:hover{
 	
 	width: 30px;
 	
+}
+
+.nav-link:hover{
+    
+    background-color: #001730;
+    
 }
 
 .pageTitle{
@@ -195,7 +219,7 @@ input, input:active, input:hover, select, select:active, select:hover{
 	
 }
 
-button:active{
+button:focus{
 	
 	outline: none;
 	
@@ -239,14 +263,14 @@ button:hover{
 .input-alert{
 	        
     border: 3px solid #FF1300;
-	padding: 27px;
+	padding-left: 27px;
 	        
 }
 
 .fa-exclamation-circle{
     
     font-size: 20px;   
-    margin: 0 0 0 5px;    
+    margin: 0 3px;    
 
 }
 
@@ -256,7 +280,7 @@ button:hover{
     
 }
 
-.editTable{
+.editTable, #measurementPopUp, #keyLiftPopUp{
  
     display: none;   
     

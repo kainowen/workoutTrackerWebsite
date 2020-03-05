@@ -150,17 +150,17 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     	<link rel="stylesheet" href="style.css">
         <style>
-            input{
-              
-                
-            }
+    
+
+
+    
         </style>
     
     	<title>My Muscle Gain Plan</title>
   	</head>
  	<body>
-	<div id="background">
-		<div id="signUpBody" class="container col-md-6">
+	<div id="background" class="min-vh-100">
+		<div id="signUpBody" class="container">
 			<img id="logo" src="images/logo.png" class="p-4">
 				<h1>My Workout Tracker </h1>
 				<p> Register today to find a workout plan that's 
@@ -244,17 +244,28 @@
 
 
 
-					<p class="signUpElements mb-0 pb-5"> Already have an account?<a href="#" class="emphasis signUpElements logSignSwitch" id="logInSelect"> Log-In </a></p>
-					<p class="logInElements mb-0 pb-5"> Don't have an account?<a href="#" class="emphasis logInElements logSignSwitch" id="signUpSelect"> Sign-Up </a></p>
+					<p class="signUpElements mb-0 pb-5"> Already have an account?<a href="#" class="emphasis signUpElements logSignSwitch" id="logInSelect"> Log-in here</a></p>
+					<p class="logInElements mb-0 pb-5"> Don't have an account?<a href="#" class="emphasis logInElements logSignSwitch" id="signUpSelect"> Sign-up here </a></p>
 
 			  </div>  
 	  	</div>
-	</div>	  
-		  <div id="footer" class="align-middle"> 
-			  <p class="py-2 m-0">designed + built by 
-				  <span class="emphasis">liam kain owen</span>
-			  </p>
-		  </div>
+	</div> 
+	
+        <div id="cookieConsent">
+            <div class="container clearfix">
+                <h6> Cookie Consent</h6>
+                <p class="float-left"> This website uses cookies to keep you logged in. To opt out of this service uncheck the "stay logged in?" checkbox</p>
+                <button class="button col-sm-2 float-right mb-2" id="cookieButton"> Ok </button>
+            </div>
+        </div>
+	
+	
+	
+		<footer id="footer" class="align-middle"> 
+			<p class="py-2 m-0">designed + built by 
+				<span class="emphasis">liam kain owen</span>
+			</p>
+		</footer>
 		  
     
     
@@ -265,6 +276,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script type="text/javascript" src="script.js"></script>
- 
+    <script>
+        
+        $("#cookieButton").click(function(){
+            
+            $("#cookieConsent").hide();
+            
+        })
+        
+    </script>
   </body>
 </html>

@@ -24,14 +24,14 @@ $(".logSignSwitch").click(function(){
 
 $("#emailUpdate").click(function(){
     
-    $("#emailPopup").toggle(); 
+    $("#emailPopup").slideToggle(); 
     
 }) 
     
 
 $("#nameUpdate").click(function(){
         
-    $("#namePopup").toggle(); 
+    $("#namePopup").slideToggle(); 
         
 }) 
     
@@ -96,7 +96,7 @@ let rest = $("#rest").val();
 let restTime = localStorage.getItem("restInterval"); 
 
 if($("#set").html() == " Set: 1 "){
- alert("hi");
+
     $("#restTimer").html("start");
     
 } else{
@@ -128,8 +128,17 @@ setInterval(function(){
 
 $("#measurementUpdate").click(function(){
           
-    $("#measurementPopUp").toggle();
+    $("#measurementPopUp").slideToggle();
           
 });
+
+$("#keyLiftUpdate").click(function(){
+          
+    $("#keyLiftPopUp").slideToggle();
+          
+});
+
+
+
 
 

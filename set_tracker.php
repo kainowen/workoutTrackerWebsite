@@ -27,14 +27,18 @@
         
         }
        
+        include "logincheck.php";
+
             
         
         if ($_GET["weightUsed"] != "" && $_GET["repsComplete"] !=""){
             
             if ($_GET["submit"] == "next set"){
            
+                $rpeDetails = explode(":", $_GET['rpeLevel']);
+           
                 $setDetails1=[];
-                array_push($setDetails1, $_GET["weightUsed"], $_GET["repsComplete"], $_GET["rpeLevel"]);
+                array_push($setDetails1, $_GET["weightUsed"], $_GET["repsComplete"], $rpeDetails[0]);
                     
                 $setDetails2 = serialize($setDetails1);
                 array_push($_SESSION['setDetails'], $setDetails2);
@@ -246,7 +250,7 @@
 							    
 							    if(isset($_GET["submit"]) && $_GET["submit"] == "next set" && $_GET["repsComplete"] ==""){
                 
-                                    echo "<div class='alerts' id='repAlert'> <i class='fas fa-exclamation-circle'></i> how many reps did you do?</div>";
+                                    echo "<div class='alerts' id='repAlert'><i class='fas fa-exclamation-circle'></i> how many reps did you do?</div>";
                 
                                 } 
 							
@@ -257,15 +261,15 @@
 
 							<label for="rpeInput" class="input-label"> rpe </label><br>
         			        <select class="numberInput w-100" id="rpeInput" name="rpeLevel" type="number" placeholder="8">
-						    <option>10: 0 more reps or bad form</option>
-						    <option>9.5: Maybe 1 more rep</option>
-						    <option>9: Definitely 1 more rep</option>
-						    <option>8.5: Maybe 2 more reps</option>
-						    <option selected>8: Definitely 2 more reps</option>
-						    <option>7.5: Maybe 3 more reps</option>
-						    <option>7: Definitely 3 more reps</option>
-						    <option>6.5: Maybe 4 more reps</option>
-						    <option><6: Way more reps. Add weight</option>
+						        <option>10: 0 more reps or bad form</option>
+						        <option>9.5: Maybe 1 more rep</option>
+					     	    <option>9: Definitely 1 more rep</option>
+						        <option>8.5: Maybe 2 more reps</option>
+						        <option selected>8: Definitely 2 more reps</option>
+					    	    <option>7.5: Maybe 3 more reps</option>
+					    	    <option>7: Definitely 3 more reps</option>
+					    	    <option>6.5: Maybe 4 more reps</option>
+					    	    <option><6: Way more reps. Add weight</option>
                     	    </select>
 						</div>
 					</div>

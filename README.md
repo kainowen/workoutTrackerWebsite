@@ -1,8 +1,20 @@
-# workoutTrackerWebsite
-a website for logging workouts and monitoring progress.
+# README #
 
-work-in-progress build can be viewed at www.kainowendev.tech/workout_tracker3/signup.php
 
-Styles are currently internal as software I use seems to delay updating styles from an external sheet but not internal but will be made external once finalised.
 
-I know the tools I've used aren't ideal for this project but it's mainly get to grips with SQL and PHP.
+### My workout tracker app ###
+
+* mostly an app for helping me master web development.
+* v4
+
+### How do I get set up? ###
+
+* go to www.kainowendev.tech/workout_tracker/signup.php
+* use test@account.com to take a look (don't se t up your own account with personal details yet).
+
+### Contribution guidelines ###
+
+* Feel free to review my code and leave feebdback. Very open to learning
+
+
+### Who do I talk to? ###
