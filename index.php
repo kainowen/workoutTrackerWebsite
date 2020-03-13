@@ -2,8 +2,6 @@
     
     session_start();
 
-    $alert = [];
-    
     $link = mysqli_connect("shareddb-s.hosting.stackcp.net", "myusers-3132359bf0", "SAb.DCIPW}'c", "myusers-3132359bf0");
 
     if (!$link) {
@@ -11,8 +9,8 @@
         die('Connect Error: ' . mysqli_connect_error());
     }
 
-    include "logincheck.php";
-    include "workoutreset.php";
+    include "./php_functions/logincheck.php";
+    include "./php_functions/workoutreset.php";
 
     $notificationArray=[];
     
@@ -35,15 +33,64 @@
         $date = explode(" ", $value["date_created"]);
         $newDate = date("d/m/y", strtotime($date[0]));
         $newTime =date("H:i", strtotime($date[1]));
-        $notification = "<div class='activityBlock'>
-					        <p class='font-weight-bold'><i class='fas fa-check emphasis pr-2'></i>".$row['title']."</p>
-					        <p class='px-4'>".$row['body']." ".$value['details']."</p>
-					        <p class='px-4'> <small><span class='pr-2'>".$newTime."</span><span>".$newDate."</span></small></p>
-				        </div>";
         
-        array_push($notificationArray, $notification); 
+        if ($value['notificationid'] == 2){
+        
+            $workoutDetails = $value['details'];
+            $workout = explode(", ", $value['details']);
+            
+            $exerciseRecord = $_SESSION['id']."exerciserecord";
+            $workoutDiary = $_SESSION['id']."workoutdiary";
+            $workoutName = $workout[0]."_rpt_".$workout[1];
+
+            $query3 = "SELECT workoutid FROM ".$workoutName." LIMIT 1";
+            $result3 = mysqli_query($link, $query3);
+            $row3 = mysqli_fetch_array($result3);
+            
+            $workoutId = $row3['workoutid'];
+         
+            $date = $value["date_created"];
+            
+            $notification = "<div class='activityBlock clearfix workoutNotification pointer'>
+        	   			        <p class='font-weight-bold'><i class='fas fa-check emphasis pr-2'></i>".$row['title']."</p>
+        				        <p class='px-4'>".$row['body']." ".$value['details']."</p>
+        				        <p class='px-4 d-inline float-left'> <small><span class='pr-2'>".$newTime."</span><span>".$newDate."</span></small></p>
+        			            <form method='get' class='d-inline float-right px-4'>
+                                    <input type='hidden' name='formSubmit' value='see more' class='btn emphasis py-0'>
+        			                <input type='hidden' name='workoutId' value=".$workoutId.">
+        			                <input type='hidden' name='workoutDate' value='".$date."'>
+        			            </form>
+        			        </div>";
+            
+            array_push($notificationArray, $notification);     
+                
+                
+                
+            } else {
+            
+            $notification = "<div class='activityBlock clearfix'>
+    					        <p class='font-weight-bold'><i class='fas fa-check emphasis pr-2'></i>".$row['title']."</p>
+    					        <p class='px-4'>".$row['body']." ".$value['details']."</p>
+    					        <p class='px-4 d-inline float-left'> <small><span class='pr-2'>".$newTime."</span><span>".$newDate."</span></small></p>
+    				        </div>";
+            
+            array_push($notificationArray, $notification); 
+            
+        }
             
     }
+    
+    if (isset($_GET['formSubmit']) && $_GET['formSubmit'] === 'see more'){
+        
+        header("Location: workout_history.php");
+        
+        $_SESSION['workoutId'] = $_GET['workoutId'];
+        $_SESSION['workoutDate'] = $_GET['workoutDate'];
+
+    }
+    
+    
+    
 ?>
 
 <!doctype html>
@@ -160,10 +207,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    
+    <script type="text/javascript" src="javascript/script.js"></script>
 
-    <script type="text/javascript" src="script.js"></script>
-    
  
   </body>
 </html>

@@ -9,6 +9,7 @@
     $_SESSION["email"] = $email;
     $emailErrors=[];
     $passwordErrors=[];
+    
     if (isset($_COOKIE['workoutTracker'])){
         
         header("Location: index.php");
@@ -53,8 +54,8 @@
                     
                     header("Location: index.php");
 
-                    $query = "INSERT INTO myusers(email, password) 
-                            VALUES('".mysqli_real_escape_string($link, $email)."', '".mysqli_real_escape_string($link, $hash)."')";
+                    $query = "INSERT INTO myusers(email, password, key_lift_1, key_lift_2, key_lift_3, key_lift_4, key_lift_5) 
+                            VALUES('".mysqli_real_escape_string($link, $email)."', '".mysqli_real_escape_string($link, $hash)."', 102, 46, 82, 115, 21)";
                         
                     $result = mysqli_query($link, $query);
 
@@ -67,6 +68,7 @@
 
                     $idHolder = $row['id'];
                     $exerciserecord = $idHolder."exerciserecord";
+                    $workoutDiary = $idHolder."workoutdiary";
          
                     $date = date('Y-m-d H:i:s', time());
              
@@ -82,6 +84,15 @@
                               )";
                         
                     mysqli_query($link, $query);
+
+                    $query = "CREATE TABLE ".$workoutDiary."(
+                              id int NOT NULL AUTO_INCREMENT,
+                              PRIMARY KEY (id)
+                              )";
+                        
+                    mysqli_query($link, $query);
+
+
 
                     if (isset($cookies)){
                         
@@ -150,8 +161,7 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     	<link rel="stylesheet" href="style.css">
         <style>
-    
-
+        
 
     
         </style>
@@ -169,7 +179,7 @@
  
 				<div class="logSignBox">
 					<form method='post'>
-						<div class="form-group signUpElements col-md">
+						<div class="form-group signUpElements">
 							<div class="inputShell mb-3">
 								<label for="signUpInputEmail" class="input-label">email address:</label><br>
 								<input type="email" class="textInput w-100" id="signUpInputEmail" aria-describedby="emailHelp" placeholder="name@example.com" name="email">
@@ -208,7 +218,7 @@
 
 
 					<form method='post'>
-						<div class="form-group logInElements col-md">
+						<div class="form-group logInElements">
 							<div class="inputShell mb-3">
 								<label for="logInInputEmail" class="input-label">email address:</label><br>
 								<input type="email" class="textInput w-100" id="logInInputEmail" aria-describedby="emailHelp" placeholder="name@example.com" name="email">

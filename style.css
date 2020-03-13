@@ -6,9 +6,6 @@ body{
 
 }
 
-
-
-
 #background{
 
 	background: url("images/backgroundimage.jpg");
@@ -24,6 +21,8 @@ body{
 	
 	text-align: center;
 	color: white;
+    width: 500px;
+    margin:auto;
 
 }
 
@@ -132,8 +131,14 @@ input, input:focus, input:hover, select, select:focus, select:hover{
 	#signUpBody{
 		
 		padding: 50px 20px 30px 20px;
+		width: 100%
 		
 	}
+
+}
+	
+	
+	
 	
 }
 
@@ -252,8 +257,18 @@ button:hover{
     font-weight: bold;
     background-color: #FF1300;
 }
-	   
-	   
+	  
+.success{
+	        
+    background-color: #00FF5D;
+	font-weight: bold;
+	position: fixed;
+	bottom: 20px;
+	z-index: 2;
+	padding-left: 30px;
+            
+}
+
 .nav-i{
     
     font-size: 25px;
@@ -286,27 +301,6 @@ button:hover{
     
 }
 
-.editTableBox, .tableBox{
-            
-        width: 30px;
-        padding: 0;
-        margin: 0;
-        text-align: center;
-        border:none;
-    }
-        
-.editTableBox:hover, .editTableBox:active {
-
-    text-decoration: underline;
-            
-}
-        
-.weightInput{
-            
-    width: 50px;
-            
-}
-
 select{
     
     background-color: white;
@@ -314,3 +308,30 @@ select{
 }
 
 }
+
+
+
+.tableDetails{
+    width: 35%;
+    padding: auto;
+    font-size: 0.8rem;
+    border-bottom: 1px solid #EEEEEE;
+}
+
+.tableBox{
+    
+    text-align: center;
+    font-size: 0.8rem;
+    border-bottom: 1px solid #EEEEEE;
+}
+
+table{
+    width: 100%;
+}
+
+.editTableBox:hover, .editTableBox:active {
+    
+    text-decoration: underline;
+    
+}
+        

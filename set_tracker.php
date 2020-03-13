@@ -1,110 +1,67 @@
 <?php
     session_start();
-        
-        $level = $_SESSION["level"];
-        $workout = $_SESSION["workout"];
-        $exercise = $_SESSION["targetExercise"];
-        $series = $_SESSION["targetseries"];
-        $set = $_SESSION["targetSet"];
-        $reps = $_SESSION["targetReps"];
-        $rest = $_SESSION["targetRest"];
-        $notes = $_SESSION["targetNotes"];
-        $setOrder = $_SESSION["setOrder"];
-        $exerciseQuery = strtolower(str_replace(" ", "", $exercise));
-        $exerciseRecord = $_SESSION['id']."exerciserecord";
-        
-        if (($_SESSION['level'] === '') ){
 
+        include "./php_functions/logincheck.php";
+        include "./php_functions/workout_populate.php";
+
+        if (($_SESSION['level'] === '') ){
             header("location: select_workout.php");
-            
         }   
 
         $link = mysqli_connect("shareddb-s.hosting.stackcp.net", "myusers-3132359bf0", "SAb.DCIPW}'c", "myusers-3132359bf0");
        
         if (!$link) {
-            
             die('Connect Error: ' . mysqli_connect_error());
-        
         }
        
-        include "logincheck.php";
-
-            
+        $query ="SELECT weight, reps, rpe
+                FROM ".$exerciseRecord."
+                WHERE exerciseid = '".$exerciseId."'
+                ORDER BY id DESC
+                LIMIT 5";
+               
+        $result = mysqli_query($link, $query);
+        
+        $liftHistory = [];
+        $record = "<strong>Lift History: </strong><br>";
+                
+        $i = 0;
+                
+        foreach ($result as $value){
+            array_push($liftHistory, $value);
+            if ($i == 0){
+                $record .= "<strong>Weight: ".$liftHistory[$i]['weight']." X Reps: ".$liftHistory[$i]['reps']." @ RPE: ".$liftHistory[$i]['rpe']."</strong><br>";
+            } else {
+                $record .= "Weight: ".$liftHistory[$i]['weight']." X Reps: ".$liftHistory[$i]['reps']." @ RPE: ".$liftHistory[$i]['rpe']."<br>";
+            }
+            $i++;
+        };
         
         if ($_GET["weightUsed"] != "" && $_GET["repsComplete"] !=""){
             
             if ($_GET["submit"] == "next set"){
-           
+                
+                $setOrder++;
+                
                 $rpeDetails = explode(":", $_GET['rpeLevel']);
            
                 $setDetails1=[];
                 array_push($setDetails1, $_GET["weightUsed"], $_GET["repsComplete"], $rpeDetails[0]);
-                    
+
                 $setDetails2 = serialize($setDetails1);
                 array_push($_SESSION['setDetails'], $setDetails2);
-                
-                $setOrder++;    
-                $query = "SELECT * FROM ".$level."_rpt_".$workout." WHERE id =".$setOrder;
-              
-                $result = mysqli_query($link, $query);
-                $row = mysqli_fetch_array($result);
-                
-                if (array_key_exists('series', $row)){
-                    $_SESSION["level"] = $level;
-                    $_SESSION["workout"] = $workout;
-                    $_SESSION["targetseries"] = $row['series'].".".$row['seriesorder'];
-                    $_SESSION["targetExercise"] = $row['exercise'];
-                    $_SESSION["targetSet"] = $row['exerciseset'];
-                    $_SESSION["targetReps"] = $row['reps'];
-                    $_SESSION["targetRest"] = $row['rest'];
-                    $_SESSION["targetNotes"] = $row['notes'];
-                    $_SESSION['setOrder'] = $setOrder;
-                    
-                    $exercise = $_SESSION["targetExercise"];
-                    $series = $_SESSION["targetseries"];
-                    $set = $_SESSION["targetSet"];
-                    $reps = $_SESSION["targetReps"];
-                    $rest = $_SESSION["targetRest"];
-                    $notes = $_SESSION["targetNotes"];
-                   
-                    
-                } else {
-                    
-                 header("Location: summary.php");  
-                 
-                }
-                
+
+                workoutPopulate($setOrder, $level, $workout, $link);
+
             }
         
         } else if ($_GET["submit"] == "back"){
-            
+
             if ($setOrder > 1){
-                $setOrder = $_SESSION["setOrder"];
-                $setOrder--;    
-                $query = "SELECT * FROM ".$level."_rpt_".$workout." WHERE id =".$setOrder;
-              
-          
-                $result = mysqli_query($link, $query);
-                $row = mysqli_fetch_array($result);
                 
-                $_SESSION["level"] = $level;
-                $_SESSION["workout"] = $workout;
-                $_SESSION["targetseries"] = $row['series'].".".$row['seriesorder'];
-                $_SESSION["targetExercise"] = $row['exercise'];
-                $_SESSION["targetSet"] = $row['exerciseset'];
-                $_SESSION["targetReps"] = $row['reps'];
-                $_SESSION["targetRest"] = $row['rest'];
-                $_SESSION["targetNotes"] = $row['notes'];
-                $_SESSION['setOrder'] = $setOrder;
+                $setOrder--;
                 
-                $exercise = $_SESSION["targetExercise"];
-                $series = $_SESSION["targetseries"];
-                $set = $_SESSION["targetSet"];
-                $reps = $_SESSION["targetReps"];
-                $rest = $_SESSION["targetRest"];
-                $notes = $_SESSION["targetNotes"];
-                
-                array_pop($_SESSION['setDetails']);
+                workoutPopulate($setOrder, $level, $workout, $link);
                 
             } else {
                 
@@ -114,42 +71,14 @@
         
         }
         
-        $exerciseQuery = strtolower(str_replace(" ", "", $exercise));
-            
-                
-        $query ="SELECT ".$exerciseQuery."
-                FROM ".$exerciseRecord."
-                WHERE ".$exerciseQuery." != ''
-                ORDER BY id DESC
-                LIMIT 5";
-                         
-        $result = mysqli_query($link, $query);
-                
-        $row = [];
-                
-        $record = "<strong>Lift History: </strong><br>";
-                
-        $i = 0;
-                
-        foreach ($result as $value){
-        
-            $value = unserialize($value[$exerciseQuery]);
-            array_push($row, $value);
-        
-            if ($i == 0){
-                       
-                $record .= "<strong>Weight: ".$row[$i][0]." X Reps: ".$row[$i][1]." @ RPE: ".$row[$i][2]."</strong><br>";
-                   
-            } else {
-                       
-                $record .= "Weight: ".$row[$i][0]." X Reps: ".$row[$i][1]." @ RPE: ".$row[$i][2]."<br>";
-                       
-            }
-                 
-            $i++;
-                
-        };
-              
+        $exercise = $_SESSION["targetExercise"];
+        $exerciseId = $_SESSION["exerciseId"];
+        $series = $_SESSION["targetseries"];
+        $set = $_SESSION["targetSet"];
+        $reps = $_SESSION["targetReps"];
+        $rest = $_SESSION["targetRest"];
+        $notes = $_SESSION["targetNotes"];    
+
 ?>
 <!doctype html>
 <html lang="en">
@@ -206,7 +135,7 @@
 			<div class="col-md-8 container p-4">
         		<h1 id="set"> <?php echo "Set: ".$set ?> </h1>
 				<h4 class="pt-1">Workout: <strong> <?php echo $level.", ".$workout;?></strong></h4>
-	  			<h4 class="pt-1 d-inline">Exercise: <strong> <?php echo $series." ".$exercise?> </strong></h4>
+	  			<h4 class="pt-1 d-inline">Exercise: <strong> <?php echo $series." ".$exercise ?> </strong></h4>
 	  			    <p id="popover" class="d-inline align-bottom" data-container="body" data-html="true" data-toggle="popover" data-placement="bottom" data-content='<?php echo $record ?>' > <i class="fas fa-info-circle emphasis pointer"> </i></p>
 				
 				<div class="activityBlock bg-dark text-white mt-3 clearfix timer">
@@ -228,9 +157,8 @@
 						
 						<div class="row">
 							
-							<div class="col-sm-4 px-2 inputShell">
-								<label for="weightInput" class="input-label"> weight (kg)</label><br>
-        		    			<input class="numberInput w-100" name="weightUsed" step="0.5" id="weightInput" type="number" placeholder="eg. 50">			 
+							<div class="col-lg-4 px-2 inputShell">
+        		    			<?php echo $weightPlaceholder ?>		 
 							    <?php 
         		        
                     		        if(isset($_GET["submit"]) && $_GET["submit"] == "next set" && $_GET["weightUsed"] ==""){
@@ -243,8 +171,8 @@
 							</div>
 					
 					
-						<div class="col-sm-4 px-2 inputShell">
-							<label for="repInput" class="input-label"> rep Target: <?php echo $reps?> </label><br>
+						<div class="col-lg-4 px-2 inputShell">
+							<label for="repInput" class="input-label"> rep target: <?php echo $reps?> </label><br>
         		    		<input class="numberInput w-100" name="repsComplete" id="repInput" type="number" placeholder ="<?php echo $reps?>">
 							<?php 
 							    
@@ -257,10 +185,9 @@
 							?>
 							</div>
 							
-						<div class="col-sm-4 px-2">
-
+						<div class="col-lg-4 px-2">
 							<label for="rpeInput" class="input-label"> rpe </label><br>
-        			        <select class="numberInput w-100" id="rpeInput" name="rpeLevel" type="number" placeholder="8">
+        			        <select class="numberInput w-100" id="rpeInput" name="rpeLevel" type="number">
 						        <option>10: 0 more reps or bad form</option>
 						        <option>9.5: Maybe 1 more rep</option>
 					     	    <option>9: Definitely 1 more rep</option>
@@ -318,16 +245,17 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 			
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-	<script type="text/javascript" src="script.js"></script>
+    <script type="text/javascript" src="javascript/script.js"></script>    
+    <script type="text/javascript" src="javascript/timer.js"></script>
     <script>
-        
-        $("#nextSet").click(function(){
+    $("#nextSet").click(function(){
+          
+    localStorage.setItem('restInterval', rest);
 	           
-            localStorage.setItem('restInterval', rest);
-	           
-        });
+});
+
         
     </script>
-  
+
   </body>
 </html>

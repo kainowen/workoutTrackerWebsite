@@ -1,11 +1,6 @@
 <?php
 
     session_start();
-
-    $alert = [];
-    $userId = $_COOKIE['workoutTracker'];
-    $email = $_SESSION['email'];
-    
    
     $link = mysqli_connect("shareddb-s.hosting.stackcp.net", "myusers-3132359bf0", "SAb.DCIPW}'c", "myusers-3132359bf0");
 
@@ -14,8 +9,8 @@
         die('Connect Error: ' . mysqli_connect_error());
     }
     
-    include "logincheck.php";
-    include "workoutreset.php";
+    include "./php_functions/logincheck.php";
+    include "./php_functions/workoutreset.php";
 
     
     $query = "SELECT weight, bf, arm, hip, waist
@@ -41,16 +36,38 @@
     
     $query = "SELECT key_lift_1, key_lift_2, key_lift_3, key_lift_4, key_lift_5
               FROM myusers
-              WHERE id = '".$_SESSION['id']."'";  
+              WHERE id = '".$_SESSION['id']."'
+              LIMIT 5";
       
     $result = mysqli_query($link, $query);
     $row = mysqli_fetch_array($result);
-     
-    $keyLift1 = $row['key_lift_1'];
-    $keyLift2 = $row['key_lift_2'];
-    $keyLift3 = $row['key_lift_3'];
-    $keyLift4 = $row['key_lift_4'];
-    $keyLift5 = $row['key_lift_5'];
+    $i = 0;
+    $keyLifts =[];
+    foreach ($row as $value){
+        
+        $query2 = "SELECT exercisename FROM exerciselibrary WHERE id =".$row[$i];
+               
+        $result2 = mysqli_query($link, $query2);
+        $row2 = mysqli_fetch_array($result2);
+        
+        $keyLifts = $row2[0];
+        
+        $query3 = "SELECT MAX(weight)
+                   FROM ".$exerciseRecord."
+                   WHERE exerciseid = ".$row[$i];
+
+
+        $result3 = mysqli_query($link, $query3);
+        $row3 = mysqli_fetch_array($result3);
+
+        if ($i < 5){
+            if (isset($row3['MAX(weight)'])){
+                $keyLift[$keyLifts] = $row3['MAX(weight)'];
+            }
+        }
+        $i++;
+    }    
+
       
     if (isset($_POST['submit'])){
         
@@ -105,17 +122,7 @@
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" href="style.css">
-    <style>
-        
-        #measurementPopUp, #keyLiftPopUp{
-        
-            display: none;
-        
-        }
-        
-        
-        
-    </style>
+    <style></style>
    
     <title>MY MGP - Dashboard</title>
   </head>
@@ -171,69 +178,51 @@
                 <h4>PERSONAL BESTS</h4>
                 <div>
                     <table class="pbTable">
-                        <tr>
-                            <th class="pbTableHeads"> <?php echo $keyLift1 ?> </th>
-                        </tr>
-                        <tr>
-                            <td> weight </td>
-                        </tr>
-                    </table>
-                    <table class="pbTable">
-                        <tr>
-                            <th class="pbTableHeads"> <?php echo $keyLift2 ?>    </th>
-                        <tr>
-                            <td> weight </td>
-                        </tr>
-                    </table>
-                    <table class="pbTable">
-                        <tr>
-                            <th class="pbTableHeads"> <?php echo $keyLift3 ?>    </th>
-                        </tr>
-                        <tr>
-                            <td> weight </td>
-                        </tr>
-                        <table class="pbTable">
-                        <tr>
-                            <th class="pbTableHeads"> <?php echo $keyLift4 ?>    </th>
-                        </tr>
-                        <tr>
-                            <td> weight </td>
-                        </tr>
-                    </table>
-                    <table class="pbTable">
-                        <tr>
-                            <th class="pbTableHeads"> <?php echo $keyLift5 ?>    </th>
-                        </tr>
-                        <tr>
-                            <td> weight </td>
-                        </tr>
-                    </table>
+                    <?php
+                    
+                    foreach($keyLift as $key => $value){
+                        echo "<tr>
+                                <th class='pbTableHeads'>".$key."</th>
+                              </tr>
+                              <tr>
+                                <td> Heaviest weight lifted: ".$value."kg </td>
+                              </tr>";
+                       
+                    }
+                    ?>
+
                     </table>
                 </div>
             </div>
             
             <div class="activityBlock mb-3 p-3"> 
-                <h4>MEASUREMENTS</h4> 
-                <a id="measurementUpdate" class="emphasis float-right pointer"> update </a>
-                <div id="measurementPopUp" class="form-group">
+                <div>
+                    <h4>MEASUREMENTS</h4> 
+                    <a id="measurementUpdate" class="emphasis float-right pointer"> update </a>
+                </div>
+                <div id="measurementPopUp" class="form-group clearfix">
                     <form method="post">
-                        
-                        <label for="weighUpdate" class="input-label"> Weight </label>
-                        <input type="number" name="weight" step="0.1" id="weightUpdate" class="numberInput col-sm-2" placeholder="type most recent weight here">
-
-                        <label for="bfUpdate" class="input-label"> Body Fat % </label>
-                        <input type="number" name="bf" step="0.1" id="bfUpdate" class="numberInput col-sm-2" placeholder="type most recent body fat % here">
-                        
-                        <label for="armUpdate" class="input-label"> Arm Circumference (cm) </label>
-                        <input type="number" name="arm" step="0.1" id="armUpdate" class="numberInput col-sm-2" placeholder="type most recent arm circumference here">
-
-                        <label for="waistUpdate" class="input-label"> Waist Circumference (cm) </label>
-                        <input type="number" name="waist" step="0.1" id="waistUpdate" class="numberInput col-sm-2" placeholder="type most recent waist circumference here">
-                                               
-                        <label for="hipUpdate" class="input-label"> Hip Circumference (cm) </label>
-                        <input type="number" name="hip" step="0.1" id="hipUpdate" class="numberInput col-sm-2" placeholder="type most recent hip circumference here">
-
-                        <input type="submit" name="submit" value="submit" class="button col-md-2">
+                        <div class="inputshell">
+                            <label for="weighUpdate" class="input-label"> Weight: </label><br>
+                            <input type="number" name="weight" step="0.1" id="weightUpdate" class="numberInput w-100" placeholder="type your weight here">
+                        </div>
+                        <div class="inputshell">
+                            <label for="bfUpdate" class="input-label"> Body Fat %: </label>
+                            <input type="number" name="bf" step="0.1" id="bfUpdate" class="numberInput w-100" placeholder="type your body fat % here">
+                        </div>
+                        <div class="inputshell">
+                            <label for="armUpdate" class="input-label"> Arm Circumference (cm): </label>
+                            <input type="number" name="arm" step="0.1" id="armUpdate" class="numberInput w-100" placeholder="type your arm circumference here">
+                        </div>
+                        <div class="inputshell">
+                            <label for="waistUpdate" class="input-label"> Waist Circumference (cm): </label>
+                            <input type="number" name="waist" step="0.1" id="waistUpdate" class="numberInput w-100" placeholder="type your waist circumference here">
+                        </div>
+                        <div class="inputshell">                       
+                            <label for="hipUpdate" class="input-label"> Hip Circumference (cm): </label>
+                            <input type="number" name="hip" step="0.1" id="hipUpdate" class="numberInput w-100" placeholder="type your hip circumference here">
+                        </div>
+                        <input type="submit" name="submit" value="submit" class="button col-md-2 float-right">
                     </form>                    
                 </div>
                 
@@ -325,7 +314,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    <script type="text/javascript" src="script.js"> </script>
- 
+    <script type="text/javascript" src="javascript/script.js"></script>    
   </body>
 </html>

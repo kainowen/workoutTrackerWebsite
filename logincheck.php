@@ -1,7 +1,7 @@
 <?php
 
-    $userId = $_COOKIE['workoutTracker'];
     $email = $_SESSION['email'];
+    $exerciseRecord = $_SESSION['id']."exerciserecord";
 
     $link = mysqli_connect("shareddb-s.hosting.stackcp.net", "myusers-3132359bf0", "SAb.DCIPW}'c", "myusers-3132359bf0");
 
@@ -13,6 +13,8 @@
 
     
     if (isset($_COOKIE['workoutTracker'])){
+
+        $userId = $_COOKIE['workoutTracker'];
 
         $query = "SELECT id, email, Name
                     FROM myusers
