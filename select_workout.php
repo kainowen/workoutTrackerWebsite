@@ -2,12 +2,19 @@
 
     session_start();
   
-    include "logincheck.php";
-    include "workoutreset.php";
-
+    include "./php_functions/logincheck.php";
+    include "./php_functions/workoutreset.php";
+    include "./php_functions/workout_populate.php";
 
     $submit = $_GET["submit"];
     $setOrder = 1;
+
+    $link = mysqli_connect("shareddb-s.hosting.stackcp.net", "myusers-3132359bf0", "SAb.DCIPW}'c", "myusers-3132359bf0");
+
+    if (!$link) {
+        die('Connect Error: ' . mysqli_connect_error());
+    }
+
 
    if (isset($submit) && $submit == "back"){
        
@@ -23,30 +30,10 @@
         $workout = strtolower(str_replace("Body", "", $workoutSelect));
             $workout = str_replace(" ", "", $workout);
        
-       if (!$link) {
-           
-            die('Connect Error: ' . mysqli_connect_error());
-        }
-       
-        $query = "SELECT * FROM ".$level."_rpt_".$workout." WHERE id =".$setOrder;
-       
-        $result = mysqli_query($link, $query);
-        $row = mysqli_fetch_array($result);
-       
-        $_SESSION["level"] = $level;
-        $_SESSION["workout"] = $workout;
-        $_SESSION["targetseries"] = $row['series'].".".$row['seriesorder'];
-        $_SESSION["targetExercise"] = $row['exercise'];
-        $_SESSION["targetSet"] = $row['exerciseset'];
-        $_SESSION["targetReps"] = $row['reps'];
-        $_SESSION["targetRest"] = $row['rest'];
-        $_SESSION["targetNotes"] = $row['notes'];
-        $_SESSION['setOrder'] = $setOrder;
-        $_SESSION['setDetails'] = [];
-       
+
         header("Location: set_tracker.php");
-        
-       
+
+        workoutPopulate($setOrder, $level, $workout, $link);
    }
    
 ?>
@@ -197,7 +184,7 @@
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    <script type="text/javascript" src="script.js"></script>
-    
+    <script type="text/javascript" src="javascript/script.js"></script>    
+    <script type="text/javascript" src="javascript/timer.js"></script>
   </body>
 </html>
