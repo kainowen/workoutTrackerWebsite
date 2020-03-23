@@ -1,48 +1,36 @@
 body{
-    
     padding: 0;   
     margin: 0;
 	font-family: 'Montserrat' ;
-
 }
 
 #background{
-
 	background: url("images/backgroundimage.jpg");
 	background-size: cover;
 	background-repeat: no-repeat;	
 	background-color: black;
-	
 }
 
 
 
 #signUpBody{
-	
 	text-align: center;
 	color: white;
     width: 500px;
     margin:auto;
-
 }
 
 #logo{
-	
 	height: 150px;
-	
 }
 
 h1{ 
-	
 	font-size: 3rem;
 	font-weight: bold;
-	
 }
 
 h2{
-	
 	font-size: 2rem;
-	
 }
 
 .inputShell{
@@ -80,7 +68,7 @@ h2{
 	color: black;
 	font-weight: bold;
 	background-color: #00ECFF;
-	height: 44px;
+	height: 50px;
 	border-radius: 25px;
 	border: solid 3px #00ECFF;
 
@@ -93,14 +81,18 @@ h2{
 	
 }
 
-input, input:focus, input:hover, select, select:focus, select:hover{
-	        
+input, 
+input:focus, 
+input:hover, 
+select, 
+select:focus, 
+select:hover,
+button:focus,
+button:hover, {
     outline: none;
-	outline:0;
 }
 
 #cookieConsent{
-                    
     width: 100%;
     background-color: black;
     z-index: 1;
@@ -109,69 +101,49 @@ input, input:focus, input:hover, select, select:focus, select:hover{
     color: white;
     padding: 20px;
     border: solid 1px gray;
-                        
+
 }
 
 #footer{
-
 	background-color: black;
 	color: white;
 	text-align: center;
 	font-size: 0.8rem;
-
 }
 
 @media only screen and (max-width: 575px) {
  	#logo{
-	
 	display: none;
-	
 	}
 	
 	#signUpBody{
-		
 		padding: 50px 20px 30px 20px;
-		width: 100%
-		
+		width: 100%;
 	}
-
-}
-	
-	
-	
-	
 }
 
 .header{
-	
 	background-color: black;
 	color: white;
 	padding: 5px;
-
 }
 
 .headerLogo{
-	
 	width: 30px;
-	
 }
 
 .nav-link:hover{
-    
     background-color: #001730;
-    
+    filter: brightness(0.8);
 }
 
 .pageTitle{
-
 	font-weight: bold;
 	font-size: 1rem;
 	width: 200px;
-	
 }
 
 #avatar{
-	
 	border-radius: 50%;
 	width: 40px;
 	height: 40px;
@@ -179,77 +151,47 @@ input, input:focus, input:hover, select, select:focus, select:hover{
 
 
 .active{
-
 	text-decoration: underline;
-	
 }
 
 
 .active-sm{
-            
     border-bottom: solid 2px #00ECFF;
-            
 }
 
 
 .activityBlock{
-
-	
-	border-radius: 15px;
+	border-radius: 10px;
 	border: solid #EFEFEF 1px;
 	background-color: #F6F6F6;
 	padding: 20px;
 	margin-bottom: 15px;
-	
 }
 
 .pointer{
-	
 	cursor: pointer;
-
 }
 
 #namePopup, #emailPopup{
-	
 	display: none;	
-	
 }
 
 .selectButton{
-	
 	width: 175px;
 	height: 175px;
 	border-radius: 15px;
 	border: solid 2px #EEEEEE;
-	
-}
-
-button:focus{
-	
-	outline: none;
-	
-}
-
-button:hover{
-    
-    outline:none;
-    
 }
 
 .selectButton-active{
-	
 	border: solid 3px #00ECFF;
-	
 }
 
 .bg-dark{
-
 	background-color: #001730 !important;
-	
 }
 
 .alerts{
-	        
     border-radius: 25px 25px 15px 15px;
     padding: 50px 5px 4px 5px;
     margin-top: -63px;
@@ -259,40 +201,31 @@ button:hover{
 }
 	  
 .success{
-	        
     background-color: #00FF5D;
 	font-weight: bold;
 	position: fixed;
 	bottom: 20px;
 	z-index: 2;
 	padding-left: 30px;
-            
+	right: 0;
 }
 
 .nav-i{
-    
     font-size: 25px;
-    
 }
 	    
 .input-alert{
-	        
     border: 3px solid #FF1300;
 	padding-left: 27px;
-	        
 }
 
 .fa-exclamation-circle{
-    
     font-size: 20px;   
     margin: 0 3px;    
-
 }
 
 .input-label{
-    
     padding-left: 30px;
-    
 }
 
 .editTable, #measurementPopUp, #keyLiftPopUp{
@@ -300,16 +233,16 @@ button:hover{
     display: none;   
     
 }
-
-select{
-    
-    background-color: white;
+        
+.editTableBox{
+    width: 50px;
     border: none;
 }
 
+select{
+    background-color: white;
+    border: none;
 }
-
-
 
 .tableDetails{
     width: 35%;
@@ -319,7 +252,6 @@ select{
 }
 
 .tableBox{
-    
     text-align: center;
     font-size: 0.8rem;
     border-bottom: 1px solid #EEEEEE;
@@ -332,6 +264,35 @@ table{
 .editTableBox:hover, .editTableBox:active {
     
     text-decoration: underline;
-    
 }
         
+.popup{
+    height: 400px;
+    position: fixed;
+    top: calc(50% - 150px);
+    border: solid 1px #001730;
+    z-index: 2;
+    clear:both;
+    display: none;
+    right:0;
+}
+        
+.close{
+    color: grey;
+    cursor: pointer;
+}
+        
+.pbTitle{
+    background-color: #F6F6F6;
+    border: none;
+    font-weight: bold;
+    padding-left: 0;
+}
+        
+pbTitle:hover, .pbTitle:focus{
+    outline: none;
+}
+    
+
+
+

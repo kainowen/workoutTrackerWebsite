@@ -11,7 +11,6 @@
     
     include "./php_functions/logincheck.php";
     include "./php_functions/workoutreset.php";
-
     
     $query = "SELECT weight, bf, arm, hip, waist
               FROM measurementrecords
@@ -104,11 +103,9 @@
         $result = mysqli_query($link, $query);
        
     }
-      
+   
       
 ?>
-
-
 
 <!doctype html>
 <html lang="en">
@@ -122,14 +119,49 @@
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" href="style.css">
-    <style></style>
-   
+    <style>
+        
+.popup{
+    height: 400px;
+    position: fixed;
+    top: calc(50% - 150px);
+    border: solid 1px #001730;
+    z-index: 2;
+    clear:both;
+    display: none;
+    right:0;
+
+}
+
+@media only screen and (max-width: 600px) {
+
+}
+        
+.close{
+    color: grey;
+    cursor: pointer;
+}
+        
+.pbTitle{
+    background-color: #F6F6F6;
+    border: none;
+    font-weight: bold;
+    padding-left: 0;
+}
+        
+pbTitle:hover, .pbTitle:focus{
+    outline: none;
+}
+        
+    
+}
+    </style>
     <title>MY MGP - Dashboard</title>
   </head>
   <body>
 		<nav class="navbar navbar-expand-lg navbar-dark bg-dark py-0">
 			<div class="container col-md-8">		
-		  		<a class="navbar-brand align-middle pageTitle mx-0" href="index.html"> 
+		  		<a class="navbar-brand align-middle pageTitle mx-0" href="index.php"> 
 					<img src="images/logo.png" class="headerLogo mr-2" alt="">
 				</a>		  
 
@@ -142,11 +174,11 @@
 							</a>
 
 							<div class="dropdown-menu bg-dark" aria-labelledby="navbarDropdown">
-								<p class="emphasis text-center"> Logged in as: <br> <?php echo $userName ?></p>
+								<p class="dropdown-item emphasis"> Logged in as: <br> <?php echo $userName ?></p>
 								<div class="dropdown-divider"></div>
 								<a class="dropdown-item emphasis" href="account.php">my account</a>
 								<div class="dropdown-divider"></div>
-								<a class="dropdown-item">
+								<a>
 									<form method="post">
 										<input type ="submit" class="dropdown-item emphasis" name="logout" value="Logout">
 									</form>
@@ -165,7 +197,7 @@
 
 
             <div class="activityBlock mb-3 p-3">
-                <h4 class="">PROGRESS PICTURES</h4>
+                <h4 class="">Progress pictures</h4>
                     <div class="row">
                         <img src="" class="statProgressPicture">
                         <img src="" class="statProgressPicture">
@@ -175,57 +207,39 @@
             
             
             <div class="activityBlock mb-3 p-3"> 
-                <h4>PERSONAL BESTS</h4>
+                <h4>Personal bests</h4>
                 <div>
-                    <table class="pbTable">
-                    <?php
-                    
-                    foreach($keyLift as $key => $value){
-                        echo "<tr>
-                                <th class='pbTableHeads'>".$key."</th>
-                              </tr>
-                              <tr>
-                                <td> Heaviest weight lifted: ".$value."kg </td>
-                              </tr>";
-                       
-                    }
-                    ?>
-
-                    </table>
+                    <form method="get">
+                        <table class="pbTable">
+                        <?php
+                        
+                        foreach($keyLift as $key => $value){
+                            echo "<tr>
+                                    <th class='pbTableHeads keylift pointer'>".$key."</th>
+                                  </tr>
+                                  <tr>
+                                    <td> Heaviest weight lifted: ".$value."kg </td>
+                                  </tr>";
+                           
+                        }
+                        ?>
+                        </table>
+                    </form>
                 </div>
             </div>
             
-            <div class="activityBlock mb-3 p-3"> 
-                <div>
-                    <h4>MEASUREMENTS</h4> 
-                    <a id="measurementUpdate" class="emphasis float-right pointer"> update </a>
-                </div>
-                <div id="measurementPopUp" class="form-group clearfix">
-                    <form method="post">
-                        <div class="inputshell">
-                            <label for="weighUpdate" class="input-label"> Weight: </label><br>
-                            <input type="number" name="weight" step="0.1" id="weightUpdate" class="numberInput w-100" placeholder="type your weight here">
-                        </div>
-                        <div class="inputshell">
-                            <label for="bfUpdate" class="input-label"> Body Fat %: </label>
-                            <input type="number" name="bf" step="0.1" id="bfUpdate" class="numberInput w-100" placeholder="type your body fat % here">
-                        </div>
-                        <div class="inputshell">
-                            <label for="armUpdate" class="input-label"> Arm Circumference (cm): </label>
-                            <input type="number" name="arm" step="0.1" id="armUpdate" class="numberInput w-100" placeholder="type your arm circumference here">
-                        </div>
-                        <div class="inputshell">
-                            <label for="waistUpdate" class="input-label"> Waist Circumference (cm): </label>
-                            <input type="number" name="waist" step="0.1" id="waistUpdate" class="numberInput w-100" placeholder="type your waist circumference here">
-                        </div>
-                        <div class="inputshell">                       
-                            <label for="hipUpdate" class="input-label"> Hip Circumference (cm): </label>
-                            <input type="number" name="hip" step="0.1" id="hipUpdate" class="numberInput w-100" placeholder="type your hip circumference here">
-                        </div>
-                        <input type="submit" name="submit" value="submit" class="button col-md-2 float-right">
-                    </form>                    
-                </div>
-                
+            
+            
+            <div class="activityBlock popup col-md"> 
+                <i class="fas fa-times float-right close"></i>
+                <h4 id="popupTitle"></h4>
+                <div id="pbContent" class="h-75"> loading data...</div>
+            </div>
+            
+            
+            
+            <div class="activityBlock mb-3 p-3 clearfix"> 
+                <h4>Measurements</h4> 
                 <div class="">
                     <table class="pbTable">
                         <tr>
@@ -250,6 +264,7 @@
                         <tr>
                             <td> <?php echo $measurementDetails[2]."cm"; ?></td>
                         </tr>
+                    </table>
                     <table class="pbTable">
                         <tr>
                             <th class="pbTableHeads"> Waist Circumference </th>
@@ -266,26 +281,45 @@
                             <td> <?php echo $measurementDetails[4]."cm"; ?></td>
                         </tr>
                     </table>
-                    </table>
+                </div>
+                <a id="measurementUpdate" class="emphasis float-right pointer"> update </a>
+                <div id="measurementPopUp" class="form-group clearfix">
+                    <hr class="mt-4">
+                    <form method="post">
+                        <div class="inputshell">
+                            <label for="weighUpdate" class="input-label"> Weight: </label><br>
+                            <input type="number" name="weight" step="0.1" id="weightUpdate" class="numberInput w-100" placeholder="type your weight here">
+                        </div>
+                        <div class="inputshell">
+                            <label for="bfUpdate" class="input-label"> Body Fat %: </label>
+                            <input type="number" name="bf" step="0.1" id="bfUpdate" class="numberInput w-100" placeholder="type your body fat % here">
+                        </div>
+                        <div class="inputshell">
+                            <label for="armUpdate" class="input-label"> Arm Circumference (cm): </label>
+                            <input type="number" name="arm" step="0.1" id="armUpdate" class="numberInput w-100" placeholder="type your arm circumference here">
+                        </div>
+                        <div class="inputshell">
+                            <label for="waistUpdate" class="input-label"> Waist Circumference (cm): </label>
+                            <input type="number" name="waist" step="0.1" id="waistUpdate" class="numberInput w-100" placeholder="type your waist circumference here">
+                        </div>
+                        <div class="inputshell">                       
+                            <label for="hipUpdate" class="input-label"> Hip Circumference (cm): </label>
+                            <input type="number" name="hip" step="0.1" id="hipUpdate" class="numberInput w-100" placeholder="type your hip circumference here">
+                        </div>
+                        <input type="submit" name="submit" value="submit" class="button col-md-2 float-right">
+                    </form>                    
                 </div>
             </div>
-
-
-
-    	
-    	
-    	
-    	
     	</div>
     </div>
-    
+
     <div id="bottomNav">
     <nav class="nav fixed-bottom navbar-expand-lg navbar-dark bg-dark p-1">
 		<ul class="navbar-nav d-flex flex-row bd-highlight w-100">
 			<li class="nav-item w-25 text-center py-1">
 				<a href="index.php" class="nav-link emphasis d-none d-sm-inline" id="navDash"> dashboard </a>
                 <a href="index.php" class="nav-link emphasis d-inline d-sm-none" id="navDash">
-                    <i class="fas fa-tachometer-alt" style="font-size: 25px;"></i>				
+                    <i class="far fa-user" style="font-size: 25px;"></i>				
 			    </a>
 			</li>
 			<li class="nav-item w-25 text-center py-1">
@@ -315,5 +349,58 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script type="text/javascript" src="javascript/script.js"></script>    
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script>
+    $(".keylift").click(function(){
+            $(".popup").show();
+            $("#popupTitle").html($(this).html());
+            
+            $.ajax({
+              url:"php_functions/pb_stats.php",
+              data: {exercise: $(this).html()},
+              success: function (data){
+                 
+                let myobj = JSON.parse(data);
+                let content = [['date', 'weight', 'reps']];
+                for(let i = 0; i < myobj.length; i++){
+                    
+                    const date =myobj[i]['datecreated'].split(" ");
+                    const weight = parseInt(myobj[i]["weight"], 10);
+                    const reps = parseInt(myobj[i]["reps"], 10);
+                    
+                    content.push([date[0], weight,  reps]);
+                } 
+                
+                google.charts.load('current', {'packages':['corechart']});
+                google.charts.setOnLoadCallback(drawChart);
+                
+                      function drawChart() {
+                        
+                        const data = google.visualization.arrayToDataTable(content);        
+                        const options = {
+                                          curveType: 'function',
+                                          legend: { position: 'bottom' },
+                                          backgroundColor: "#F6F6F6",
+                                          colors: ["#00ECFF" , "black"],
+                                        };
+
+                        const chart = new google.visualization.LineChart(document.getElementById('pbContent'));
+                
+                        chart.draw(data, options);
+                      }
+
+              },    
+              error: function (){
+                  $("#pbContent").html("No content")
+              }
+            })
+        });
+        
+        $(".fa-times").click(function(){
+            $(".popup").hide();
+        })
+    </script>
+    
+    
   </body>
 </html>

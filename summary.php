@@ -254,11 +254,6 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" href="style.css">
     <style>
-        
-        .editTableBox{
-            width: 50px;
-            border: none;
-        }
 
     </style>
 
@@ -283,11 +278,11 @@
 							</a>
 
 							<div class="dropdown-menu bg-dark" aria-labelledby="navbarDropdown">
-								<p class="emphasis text-center"> Logged in as: <br> <?php echo $userName ?></p>
+								<p class="dropdown-item emphasis"> Logged in as: <br> <?php echo $userName ?></p>
 								<div class="dropdown-divider"></div>
 								<a class="dropdown-item emphasis" href="account.php">my account</a>
 								<div class="dropdown-divider"></div>
-								<a class="dropdown-item">
+								<a>
 									<form method="post">
 										<input type ="submit" class="dropdown-item emphasis" name="logout" value="Logout">
 									</form>
@@ -331,7 +326,7 @@
 				<li class="nav-item w-25 text-center py-1">
 					<a href="index.php" class="nav-link emphasis d-none d-sm-inline" id="navDash"> dashboard </a>
                     <a href="index.php" class="nav-link emphasis d-inline d-sm-none" id="navDash">
-                        <i class="fas fa-tachometer-alt" style="font-size: 25px;"></i>				
+                        <i class="far fa-user" style="font-size: 25px;"></i>				
 				    </a>
 				</li>
 				<li class="nav-item w-25 text-center py-1">
