@@ -25,7 +25,7 @@
   <body>
 		<nav class="navbar navbar-expand-lg navbar-dark bg-dark py-0">
 			<div class="container col-md-8">		
-		  		<a class="navbar-brand align-middle pageTitle mx-0" href="index.html"> 
+		  		<a class="navbar-brand align-middle pageTitle mx-0" href="index.php"> 
 					<img src="images/logo.png" class="headerLogo mr-2" alt="">
 				</a>		  
 
@@ -38,11 +38,11 @@
 							</a>
 
 							<div class="dropdown-menu bg-dark" aria-labelledby="navbarDropdown">
-								<p class="emphasis text-center"> Logged in as: <br> <?php echo $userName ?></p>
+								<p class="dropdown-item emphasis"> Logged in as: <br> <?php echo $userName ?></p>
 								<div class="dropdown-divider"></div>
 								<a class="dropdown-item emphasis" href="account.php">my account</a>
 								<div class="dropdown-divider"></div>
-								<a class="dropdown-item">
+								<a>
 									<form method="post">
 										<input type ="submit" class="dropdown-item emphasis" name="logout" value="Logout">
 									</form>
@@ -58,7 +58,7 @@
 		<div class="col-md-8 container p-4">
         	<h1> Learn </h1>
 			<h4 class="pt-1"> Tricks and tips for health and fitness </h4>
-            <p> Opps, no content here yet... Stay tuned.</p>
+            <p> Oops, no content here yet... Stay tuned.</p>
     	</div>
     </div>
     
@@ -68,7 +68,7 @@
 			<li class="nav-item w-25 text-center py-1">
 				<a href="index.php" class="nav-link emphasis d-none d-sm-inline" id="navDash"> dashboard </a>
                 <a href="index.php" class="nav-link emphasis d-inline d-sm-none" id="navDash">
-                    <i class="fas fa-tachometer-alt" style="font-size: 25px;"></i>				
+                    <i class="far fa-user" style="font-size: 25px;"></i>				
 			    </a>
 			</li>
 			<li class="nav-item w-25 text-center py-1">

@@ -142,11 +142,11 @@
 							</a>
 
 							<div class="dropdown-menu bg-dark" aria-labelledby="navbarDropdown">
-								<p class="emphasis text-center"> Logged in as: <br> <?php echo $userName ?></p>
+								<p class="dropdown-item emphasis"> Logged in as: <br> <?php echo $userName ?></p>
 								<div class="dropdown-divider"></div>
 								<a class="dropdown-item emphasis" href="account.php">my account</a>
 								<div class="dropdown-divider"></div>
-								<a class="dropdown-item">
+								<a>
 									<form method="post">
 										<input type ="submit" class="dropdown-item emphasis" name="logout" value="Logout">
 									</form>
@@ -158,12 +158,11 @@
 			</div>
 		</nav>
 
-		    <div class="">
-                <div><?php if(array_key_exists(0, $success)){echo "<div class='alert success col-md'>".$success[0]."</div>";} ?></div>
-            </div>
-
 	<div class="row mt-4 mx-0">
 		<div class="col-md-8 container p-4">
+		    <div>
+                <div><?php if(array_key_exists(0, $success)){echo "<div class='alert success col-md'>".$success[0]."</div>";} ?></div>
+            </div>
             <h1> Your account </h1>
 			<h4 class="pt-1"> Ensure your details are up to date! </h4>
 			<form method="post">
@@ -171,7 +170,7 @@
 				<div class="activityBlock p-4 mb-3">
 					<h4 class="font-weight-bold"> Details </h4>
 						
-					<p class="w-100"> Name:
+					<p class="w-100"> name:
 						<span class="font-weight-bold"> <?php echo $_SESSION['name'];?> </span>
                     	<span id="nameUpdate" class="emphasis float-right pointer"> update </span> 	
 					</p>
@@ -189,10 +188,10 @@
 					<p> Make sure your new password is <strong>safe and memorable</strong></p>
 
                     <div class="inputShell">
-				    	<label for="newPassword"> new password: </label><br>
+				    	<label for="newPassword"class="input-label"> new password: </label><br>
                     	<input class ="textInput mb-3 col-lg-5" type="password" placeholder="enter new password" name="newPassword"><br>
 
-					    <label for="newPasswordConfirm"> confirm new password: </label><br>
+					    <label for="newPasswordConfirm" class="input-label"> confirm new password: </label><br>
 				    	<input class ="textInput mb-3 col-lg-5" type="password" placeholder="re-enter new password..." name="newPasswordConfirm">	
     			    
     					    <?php
@@ -212,7 +211,7 @@
 					<p>For security purposes please enter your <strong> current </strong> password</p>
 				        
 				        <div class="inputShell my-2">
-					        <label for="currentPassword"> current password: </label><br>
+					        <label for="currentPassword" class="input-label"> current password: </label><br>
 					        <input class ="textInput col-lg-5" id="currentPassword" type="password" name="currentPassword" placeholder="enter current password">
     					        <?php
     					   
@@ -235,7 +234,7 @@
 			<li class="nav-item w-25 text-center py-1">
 				<a href="index.php" class="nav-link emphasis d-none d-sm-inline active" id="navDash"> dashboard </a>
                 <a href="index.php" class="nav-link emphasis d-inline d-sm-none" id="navDash">
-                    <i class="fas fa-tachometer-alt active-sm" style="font-size: 25px;"></i>				
+                    <i class="far fa-user active-sm" style="font-size: 25px;"></i>				
 			    </a>
 			</li>
 			<li class="nav-item w-25 text-center py-1">
